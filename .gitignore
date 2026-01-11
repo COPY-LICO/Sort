@@ -1,0 +1,31 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.ipch
+*.sdf
+*.opensdf
+*.user
+*.userosscache
+*.suo
+*.vcxproj.filters
+Debug/
+Release/
+x64/
+x86/
+*.log
+*.tmp
+*.bak
+
+# C++ build artifacts
+*.obj
+*.o
+*.lib
+*.dll
+*.exe
+*.pdb
+*.ilk
+
+# OS generated
+Thumbs.db
+.DS_Store
+desktop.ini
