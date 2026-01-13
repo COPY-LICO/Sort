@@ -11,7 +11,7 @@ SortApplication::SortApplication(QWidget *parent)
     QPushButton* button = new QPushButton(this);
     button->setGeometry(50, 50, 200, 200);
     button->setText("专用按钮");
-    connect(button, &QPushButton::clicked, this, [=]() { QMessageBox::information(this, "test", "测试用例"); });
+    connect(button, &QPushButton::clicked, this, [=]() { QMessageBox::information(this, "测试", "测试用例"); });
 }
 
 SortApplication::~SortApplication()
