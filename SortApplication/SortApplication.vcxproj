@@ -96,8 +96,13 @@
     <QtRcc Include="UI\SortApplication.qrc" />
     <QtUic Include="UI\SortApplication.ui" />
     <QtMoc Include="UI\SortApplication.h" />
+    <ClCompile Include="Form\ManagerMent.cpp" />
+    <ClCompile Include="Function\temp.cpp" />
     <ClCompile Include="UI\SortApplication.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Form\ManagerMent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
