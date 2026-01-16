@@ -47,3 +47,4 @@ XX为本地用于开发的分支，YY为github上负责分支
 `git checkout -b xx` 本地创建一个xx分支  
 `git checkout xx` 切换到xx分支  
 `git merge origin/xx` 将远程的xx分支合并到本地的当前分支
+

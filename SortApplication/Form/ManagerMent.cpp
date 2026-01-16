@@ -1,14 +1,25 @@
 #include "ManagerMent.h"
-bool ManagerMent::SaveTheFilePath(string url)
+
+ManagerMent::ManagerMent(QObject* parent = nullptr) : QObject(parent), _filePath("")
 {
-	filePath = url;
-	if (!(filePath.empty()))
-		return true;
-	else
-		return false;
+	//私有化构造函数用于处理对象
 }
 
-string ManagerMent::GetFilePath()
+ManagerMent* ManagerMent::GetInstance()
 {
-	return filePath;
+	//获取返回的单例对象指针
+	static ManagerMent instance;
+	return &instance;
+}
+
+void ManagerMent::SaveFilesPath(string url)
+{
+	//存入文件路径
+	this->_filePath = url;
+}
+
+string ManagerMent::GetFilesPath()
+{
+	//获取文件路径
+	return this->_filePath;
 }
