@@ -8,10 +8,10 @@ class ManagerMent
 {
 public:
 	//ui存入获取到的文件路径
-	static bool SaveTheFilePath(string url);
+	/*static bool SaveTheFilePath(string url);
 	//获取存放的文件路径
 	static string GetFilePath();
 private:
-	static string filePath;
+	static string filePath;*/
 };
 

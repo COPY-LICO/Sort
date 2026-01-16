@@ -1,14 +1,14 @@
 #include "ManagerMent.h"
-bool ManagerMent::SaveTheFilePath(string url)
+/*bool ManagerMent::SaveTheFilePath(string url)
 {
-	filePath = url;
+	/*filePath = url;
 	if (!(filePath.empty()))
 		return true;
-	else
-		return false;
-}
+	else*/
+	//	return false;
+//}
 
-string ManagerMent::GetFilePath()
+/*string ManagerMent::GetFilePath()
 {
 	return filePath;
-}
+}*/
