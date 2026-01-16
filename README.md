@@ -37,3 +37,13 @@ XX为本地用于开发的分支，YY为github上负责分支
 > ***绝对不要使用没有意义的变量名和函数名，如a,b,c,d***
 
 创建类对象时候保持`.h .cpp`文件形式。.h作为头文件只用于声明对象，.cpp作为源文件用于定义函数
+
+# 可能用到的命令
+`git add .` 将当前目录下的所有文件添加到提交列表里面  
+`git commit -m "xxx"` 提交提交列表里面的文件，并且备注为xxx  
+`git push origin xx:yy` 将本地的xx分支里面的东西推送到yy分支上  
+`git push origin yy` 将当前分支的东西推送到yy分支上  
+`git pull origin yy` 将github上yy分支的内容拉取到当前分支上  
+`git checkout -b xx` 本地创建一个xx分支  
+`git checkout xx` 切换到xx分支  
+`git merge origin/xx` 将远程的xx分支合并到本地的当前分支
