@@ -41,8 +41,8 @@ XX为本地用于开发的分支，YY为github上负责分支
 # 可能用到的命令
 `git add .` 将当前目录下的所有文件添加到提交列表里面  
 `git commit -m "xxx"` 提交提交列表里面的文件，并且备注为xxx  
-`git push origin xx:yy` 将本地的xx分支里面的东西推送到yy分支上  
-`git push origin yy` 将当前分支的东西推送到yy分支上  
+`git push origin xx:yy` 将本地的xx分支里面已经提交的文件推送到yy分支上  
+`git push origin yy` 将当前分支的已经提交的文件推送到yy分支上  
 `git pull origin yy` 将github上yy分支的内容拉取到当前分支上  
 `git checkout -b xx` 本地创建一个xx分支  
 `git checkout xx` 切换到xx分支  
