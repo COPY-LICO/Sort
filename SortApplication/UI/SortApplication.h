@@ -8,10 +8,9 @@ class SortApplication : public QMainWindow
     Q_OBJECT
 
 public:
-    SortApplication(QWidget *parent = nullptr);
+    SortApplication(QWidget* parent = nullptr);
     ~SortApplication();
 
 private:
     Ui::SortApplicationClass ui;
 };
-
