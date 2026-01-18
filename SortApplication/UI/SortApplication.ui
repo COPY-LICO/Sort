@@ -275,7 +275,7 @@ color:rgb(0, 0, 0);
            <string>Select the Function</string>
           </property>
          </widget>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="Func_groupBox">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -292,13 +292,14 @@ color:rgb(0, 0, 0);
             <rect>
              <x>20</x>
              <y>10</y>
-             <width>51</width>
-             <height>20</height>
+             <width>60</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">QRadioButton{
 	color:black;
+	font-size:14px;
 }
 </string>
            </property>
@@ -311,14 +312,14 @@ color:rgb(0, 0, 0);
             <rect>
              <x>100</x>
              <y>10</y>
-             <width>98</width>
-             <height>20</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">QRadioButton{
 	color:black;
-
+	font-size:14px;
 }</string>
            </property>
            <property name="text">
@@ -403,7 +404,7 @@ padding-left: 12px;
              <bool>false</bool>
             </property>
            </widget>
-           <widget class="QGroupBox" name="groupBox_2">
+           <widget class="QGroupBox" name="sort_groupBox">
             <property name="geometry">
              <rect>
               <x>20</x>
@@ -415,10 +416,10 @@ padding-left: 12px;
             <property name="title">
              <string>GroupBox</string>
             </property>
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="time_radioButton">
              <property name="geometry">
               <rect>
-               <x>20</x>
+               <x>0</x>
                <y>10</y>
                <width>170</width>
                <height>20</height>
@@ -431,10 +432,10 @@ padding-left: 12px;
               <string>By the Time Points</string>
              </property>
             </widget>
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="type_radioButton">
              <property name="geometry">
               <rect>
-               <x>20</x>
+               <x>0</x>
                <y>40</y>
                <width>170</width>
                <height>20</height>
@@ -447,10 +448,10 @@ padding-left: 12px;
               <string>By the File Types</string>
              </property>
             </widget>
-            <widget class="QRadioButton" name="radioButton_3">
+            <widget class="QRadioButton" name="size_radioButton">
              <property name="geometry">
               <rect>
-               <x>20</x>
+               <x>0</x>
                <y>70</y>
                <width>170</width>
                <height>20</height>
