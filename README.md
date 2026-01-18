@@ -11,6 +11,6 @@ eg: `manger->SaveFilePath(url);`
 `QString GetFilesPath()`来获取存入的单个文件路径  
 eg: `QString url = manger->GetFilesPath();`  
 
-`vector<QString>& GetBackSuffix()`来获取该文件能够识别的后缀库
+`vector<QString>& GetBackSuffix()`来获取该文件能够识别的后缀库  
 eg: `vector<QString>& qstr = GetBackSuffix();`  
 
