@@ -7,7 +7,7 @@ SortApplication::SortApplication(QWidget* parent)
     ui.setupUi(this);
 
 
-    //·Ö±ðÁ¬½ÓÁ½¸öQRadioButtonºÍQStackedWidgetµÄÁ½Ò³£¨lambda£©
+    //åˆ†åˆ«è¿žæŽ¥ä¸¤ä¸ªQRadioButtonå’ŒQStackedWidgetçš„ä¸¤é¡µï¼ˆlambdaï¼‰
     connect(ui.sortRadioButton, &QRadioButton::toggled, this, [=](bool checked) {
         if (checked) {
             ui.stackedWidget->setCurrentIndex(0);
@@ -19,7 +19,7 @@ SortApplication::SortApplication(QWidget* parent)
         }
     });
 
-    //ÉèÖÃÄ¬ÈÏ×´Ì¬
+    //è®¾ç½®é»˜è®¤çŠ¶æ€
     ui.sortRadioButton->setChecked(true);
 
 
