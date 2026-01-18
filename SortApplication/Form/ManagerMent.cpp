@@ -1,8 +1,15 @@
 #include "ManagerMent.h"
 
-ManagerMent::ManagerMent(QObject* parent = nullptr) : QObject(parent), _filePath("")
+ManagerMent::ManagerMent(QObject* parent = nullptr) : QObject(parent)
 {
 	//私有化构造函数用于处理对象
+	this->InitalBackSuffix();
+}
+
+void ManagerMent::InitalBackSuffix()
+{
+	//初始化后缀库
+	this->_backSuffix = TheBackSuffix();
 }
 
 ManagerMent* ManagerMent::GetInstance()
@@ -12,14 +19,40 @@ ManagerMent* ManagerMent::GetInstance()
 	return &instance;
 }
 
-void ManagerMent::SaveFilesPath(string url)
+void ManagerMent::SaveFilesPath(QString url)
 {
 	//存入文件路径
-	this->_filePath = url;
+	this->_fileGroup.push_back(url);
 }
 
-string ManagerMent::GetFilesPath()
+QString ManagerMent::GetFilesPath()
 {
 	//获取文件路径
-	return this->_filePath;
+	QString url;
+	//判断是否有未处理的路径
+	if (!this->_fileGroup.empty())
+	{
+		url = this->_fileGroup.back();
+		this->_fileGroup.pop_back();
+	}
+	else
+	{
+		url = "";
+	}
+	return url;
+}
+
+vector<QString>& ManagerMent::GetBackSuffix()
+{
+	//返回后缀库
+	return this->_backSuffix;
+}
+
+vector<QString> ManagerMent::TheBackSuffix()
+{
+	//储存已有的后缀名
+	return 
+	{
+		".txt",".cpp",".h",".exe",".doc"
+	};
 }
