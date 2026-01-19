@@ -117,6 +117,9 @@ color:rgb(0, 0, 0);
     padding: 10px;
     background-color: rgb(250, 250, 250);
 }
+#fileSelectorWidget::hover {
+    background-color: rgb( 246,  246, 246);
+}
 </string>
           </property>
           <widget class="QLabel" name="iconLabel_CloudRecord">
@@ -131,8 +134,9 @@ color:rgb(0, 0, 0);
            <property name="styleSheet">
             <string notr="true">QLabel{
 border-image: url(:/SortApplication/images/iconfont_CloudRecord.png);
-    background-color: rgb(250, 250, 250);
-}</string>
+background-color: transparent;
+}
+</string>
            </property>
            <property name="text">
             <string/>
@@ -150,8 +154,9 @@ border-image: url(:/SortApplication/images/iconfont_CloudRecord.png);
            <property name="styleSheet">
             <string notr="true">QLabel{
 	color:black;
-    background-color: rgb(250, 250, 250);
-}</string>
+    background-color: transparent;
+}
+</string>
            </property>
            <property name="text">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#232323;&quot;&gt;Click to select files&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -169,8 +174,9 @@ border-image: url(:/SortApplication/images/iconfont_CloudRecord.png);
            <property name="styleSheet">
             <string notr="true">QLabel{
 	color:black;
-    background-color: rgb(250,250,250);
-}</string>
+    background-color: transparent;
+}
+</string>
            </property>
            <property name="text">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#232323;&quot;&gt;you can select multiply&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -337,7 +343,7 @@ color:rgb(0, 0, 0);
            </rect>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="sortPage">
            <widget class="QPushButton" name="startSort_pushButton">
@@ -410,7 +416,7 @@ padding-left: 12px;
               <x>20</x>
               <y>20</y>
               <width>201</width>
-              <height>101</height>
+              <height>201</height>
              </rect>
             </property>
             <property name="title">
@@ -420,13 +426,16 @@ padding-left: 12px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>10</y>
+               <y>20</y>
                <width>170</width>
                <height>20</height>
               </rect>
              </property>
              <property name="styleSheet">
-              <string notr="true">QRadioButton{color:black}</string>
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
              </property>
              <property name="text">
               <string>By the Time Points</string>
@@ -436,13 +445,16 @@ padding-left: 12px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>40</y>
+               <y>60</y>
                <width>170</width>
                <height>20</height>
               </rect>
              </property>
              <property name="styleSheet">
-              <string notr="true">QRadioButton{color:black}</string>
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
              </property>
              <property name="text">
               <string>By the File Types</string>
@@ -452,16 +464,63 @@ padding-left: 12px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>70</y>
+               <y>100</y>
                <width>170</width>
                <height>20</height>
               </rect>
              </property>
              <property name="styleSheet">
-              <string notr="true">QRadioButton{color:black}</string>
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
              </property>
              <property name="text">
               <string>By the File Size</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="name_radioButton">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>140</y>
+               <width>170</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
+             </property>
+             <property name="text">
+              <string>By the same name</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="nameSort_Input">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>160</y>
+               <width>170</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLineEdit{
+border-radius:5px;
+border:1px solid;
+border-color:gray;
+color:black;
+}
+</string>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>eg:mine_1,mine_2 -- mine</string>
              </property>
             </widget>
            </widget>
@@ -491,9 +550,6 @@ padding-left: 12px;
             <property name="icon">
              <iconset resource="SortApplication.qrc">
               <normaloff>:/SortApplication/images/iconfont_StartOperation.png</normaloff>:/SortApplication/images/iconfont_StartOperation.png</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Return</string>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -531,6 +587,157 @@ padding-left: 12px;
              <bool>false</bool>
             </property>
            </widget>
+           <widget class="QLabel" name="promptMessage_Label">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>10</y>
+              <width>191</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#000000;&quot;&gt;You can choose one of them.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+           <widget class="QGroupBox" name="rename_groupBox">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>50</y>
+              <width>231</width>
+              <height>181</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>GroupBox</string>
+            </property>
+            <widget class="QRadioButton" name="prefix_radioButton">
+             <property name="geometry">
+              <rect>
+               <x>19</x>
+               <y>0</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
+             </property>
+             <property name="text">
+              <string>Add a prefix</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="prefix_Input">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>20</y>
+               <width>191</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLineEdit{
+border-radius:5px;
+border:1px solid;
+border-color:gray;
+color:black;
+}
+</string>
+             </property>
+             <property name="placeholderText">
+              <string>eg:2025_-- 2025_Original name</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="suffix_radioButton">
+             <property name="geometry">
+              <rect>
+               <x>19</x>
+               <y>60</y>
+               <width>98</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
+             </property>
+             <property name="text">
+              <string>Add a suffix</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="suffix_Input">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>80</y>
+               <width>191</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLineEdit{
+border-radius:5px;
+border:1px solid;
+border-color:gray;
+color:black;
+}</string>
+             </property>
+             <property name="placeholderText">
+              <string>eg:_2026 -- Original name_2026</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="unifyName_radioButton">
+             <property name="geometry">
+              <rect>
+               <x>19</x>
+               <y>120</y>
+               <width>121</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QRadioButton{
+color:black;
+font-size:13px;
+}</string>
+             </property>
+             <property name="text">
+              <string>Unify the name</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="unifyName_Input">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>140</y>
+               <width>191</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLineEdit{
+border-radius:5px;
+border:1px solid;
+border-color:gray;
+color:black;
+}</string>
+             </property>
+             <property name="placeholderText">
+              <string>eg:AI_usage -- AI_usage_1</string>
+             </property>
+            </widget>
+           </widget>
+           <zorder>rename_groupBox</zorder>
+           <zorder>startRename_pushButton</zorder>
+           <zorder>withdrawRename_pushButton</zorder>
+           <zorder>promptMessage_Label</zorder>
           </widget>
          </widget>
         </widget>
