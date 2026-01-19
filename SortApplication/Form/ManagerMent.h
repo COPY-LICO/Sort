@@ -15,9 +15,9 @@ public:
 	//初始化后缀库
 	void InitalBackSuffix();
 	//存入文件地址
-	bool SaveFiles(QString,int);
+	bool SaveFiles(QString);
 	//获取地址数组中最后存入文件的迭代器
-	std::vector<QString>::iterator GetLastFilesPathGruop();
+	std::vector<QString>::iterator GetLastFilesPathGroup();
 	//获取大小数组中最后存入文件的迭代器
 	std::vector<int>::iterator GetLastFilesSizeGroup();
 	//返回当前文件数目
@@ -37,7 +37,7 @@ public:
 
 private:
 	//私有化构造函数防止类外实例化
-	ManagerMent(QObject* parent);
+	ManagerMent(QObject* parent = nullptr);
 	//文件地址储存器
 	std::vector<QString> _filePathGroup;
 	//后缀库

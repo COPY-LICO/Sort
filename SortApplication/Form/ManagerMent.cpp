@@ -43,7 +43,7 @@ bool ManagerMent::SaveFiles(QString url)
 	return false;
 }
 
-std::vector<QString>::iterator ManagerMent::GetLastFilesPathGroup()
+vector<QString>::iterator ManagerMent::GetLastFilesPathGroup()
 {
 	//判断是否有未处理的路径
 	if (!this->_filePathGroup.empty())
