@@ -5,8 +5,6 @@
 #include <vector>
 //这是一个全局管理类，里面所有函数都采用单例形式，可在全局调用负责启动API接口
 
-using std::vector;
-
 class ManagerMent : public QObject
 {
 	Q_OBJECT
@@ -17,21 +15,34 @@ public:
 	//初始化后缀库
 	void InitalBackSuffix();
 	//存入文件地址
-	void SaveFilesPath(QString);
-	//获取文件地址
-	QString GetFilesPath();
+	bool SaveFiles(QString);
+	//获取地址数组中最后存入文件的迭代器
+	std::vector<QString>::iterator GetLastFilesPathGroup();
+	//获取大小数组中最后存入文件的迭代器
+	std::vector<int>::iterator GetLastFilesSizeGroup();
+	//返回当前文件数目
+	int GetNowFilesNum();
+	//删除最后一个文件所有信息
+	void DeleteLastFiles();
 	//返回后缀库引用
-	vector<QString>& GetBackSuffix();
+	std::vector<QString>& GetBackSuffix();
+
+
 
 	//后缀名填充函数
-	static vector<QString> TheBackSuffix();
+	static std::vector<QString> TheBackSuffix();
+
+	//调试代码 - 打印所有存入文件的信息
+	void PrintAllFilesInfo();
 
 private:
 	//私有化构造函数防止类外实例化
-	ManagerMent(QObject* parent);
-	//私有文件数据
-	vector<QString> _fileGroup;
+	ManagerMent(QObject* parent = nullptr);
+	//文件地址储存器
+	std::vector<QString> _filePathGroup;
 	//后缀库
-	vector<QString> _backSuffix;
+	std::vector<QString> _backSuffix;
+	//文件大小储存器
+	std::vector<int> _filesSizeGruop;
 };
 

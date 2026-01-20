@@ -1,4 +1,5 @@
 #include "SortApplication.h"
+#include "ManagerMent.h"
 #include <QTimer>
 
 SortApplication::SortApplication(QWidget* parent)
@@ -41,7 +42,6 @@ SortApplication::SortApplication(QWidget* parent)
 
     //设置默认状态
     ui.sortRadioButton->setChecked(true);
-
 
 
 
