@@ -108,7 +108,7 @@ void SortApplication::OpenFileDialog()
     );
     if (!folderPath.isEmpty())
     {
-        qDebug() << "选中的文件夹路径：" << folderPath;
+        qDebug() << "The path is:" << folderPath;
         // 这里可以添加后续逻辑，比如显示路径到界面、读取文件夹内容等
     }
 
