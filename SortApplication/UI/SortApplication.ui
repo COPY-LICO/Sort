@@ -206,28 +206,21 @@ color:rgb(0, 0, 0);
            <string>The File you Selected</string>
           </property>
          </widget>
-         <widget class="QScrollArea" name="scrollArea_SelectedFile">
+         <widget class="QListWidget" name="selectedFIles_listWidget">
           <property name="geometry">
            <rect>
-            <x>20</x>
+            <x>0</x>
             <y>260</y>
-            <width>200</width>
+            <width>235</width>
             <height>180</height>
            </rect>
           </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>200</width>
-             <height>180</height>
-            </rect>
-           </property>
-          </widget>
+          <property name="itemAlignment">
+           <set>Qt::AlignmentFlag::AlignVertical_Mask</set>
+          </property>
          </widget>
         </widget>
        </item>
@@ -343,7 +336,7 @@ color:rgb(0, 0, 0);
            </rect>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="sortPage">
            <widget class="QPushButton" name="startSort_pushButton">
@@ -792,6 +785,19 @@ color:rgb(0, 0, 0);
            <string>The History Record</string>
           </property>
          </widget>
+         <widget class="QListWidget" name="historyRecord_listWidget">
+          <property name="geometry">
+           <rect>
+            <x>5</x>
+            <y>51</y>
+            <width>221</width>
+            <height>391</height>
+           </rect>
+          </property>
+          <property name="itemAlignment">
+           <set>Qt::AlignmentFlag::AlignVertical_Mask</set>
+          </property>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -806,7 +812,6 @@ color:rgb(0, 0, 0);
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>Main_textBrowser</tabstop>
-  <tabstop>scrollArea_SelectedFile</tabstop>
   <tabstop>sortRadioButton</tabstop>
   <tabstop>renameRadioButton</tabstop>
  </tabstops>
