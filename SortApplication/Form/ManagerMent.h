@@ -3,6 +3,7 @@
 #include <qstring.h>
 #include <qobject.h>
 #include <vector>
+#include "Files.h"
 //这是一个全局管理类，里面所有函数都采用单例形式，可在全局调用负责启动API接口
 
 class ManagerMent : public QObject
@@ -16,14 +17,12 @@ public:
 	void InitalBackSuffix();
 	//存入文件地址
 	bool SaveFiles(QString);
-	//获取地址数组中最后存入文件的迭代器
-	std::vector<QString>::iterator GetLastFilesPathGroup();
-	//获取大小数组中最后存入文件的迭代器
-	std::vector<int>::iterator GetLastFilesSizeGroup();
+	//获取文件数组中最后存入文件的迭代器
+	std::vector<Files>::iterator GetLastFilesPathGroup();
 	//返回当前文件数目
 	int GetNowFilesNum();
 	//删除最后一个文件所有信息
-	void DeleteLastFiles();
+	bool DeleteLastFiles();
 	//返回后缀库引用
 	std::vector<QString>& GetBackSuffix();
 
@@ -34,15 +33,15 @@ public:
 
 	//调试代码 - 打印所有存入文件的信息
 	void PrintAllFilesInfo();
+	//调式代码 - 手动输入文件数据
+	void SaveFilesForTest(QString,QString,QString,QString,int);
 
 private:
 	//私有化构造函数防止类外实例化
 	ManagerMent(QObject* parent = nullptr);
-	//文件地址储存器
-	std::vector<QString> _filePathGroup;
+	//文件储存器
+	std::vector<Files> _fileGroup;
 	//后缀库
 	std::vector<QString> _backSuffix;
-	//文件大小储存器
-	std::vector<int> _filesSizeGruop;
 };
 

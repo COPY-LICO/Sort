@@ -11,7 +11,7 @@ class SortApplication : public QMainWindow
 public:
     SortApplication(QWidget* parent = nullptr);
     
-    //ÊÂ¼þ¹ýÂËÆ÷´¦Àíµã»÷ÐüÍ£ÊÂ¼þ
+    //ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½Â¼ï¿½
     bool eventFilter(QObject* watched, QEvent* event) override;
     
     
@@ -19,7 +19,7 @@ public:
 
 
 private slots:
-    //´ò¿ªÎÄ¼þ¼Ð
+    //ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
     void OpenFileDialog();
 
 private:
