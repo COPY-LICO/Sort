@@ -105,7 +105,7 @@ bool ManagerMent::SaveOperatorType(int operatorForm, int operatorType)
 
 	if (operatorForm == ChooseForm::Sort)
 	{
-		if (operatorType < 0 || operatorType > 4)
+		if (operatorType < 0 || operatorType > 3)
 		{
 			//operatorType输入错误
 			return false;
@@ -119,7 +119,7 @@ bool ManagerMent::SaveOperatorType(int operatorForm, int operatorType)
 	}
 	else if (operatorForm == ChooseForm::Rename)
 	{
-		if (operatorType < 0 || operatorType > 3)
+		if (operatorType < 0 || operatorType > 2)
 		{
 			//operatorType输入错误
 			return false;
@@ -173,7 +173,6 @@ void ManagerMent::PrintAllFilesInfo()
 
 void ManagerMent::SaveFilesForTest(QString name, QString suffix, QString time, QString path, int size)
 {
-	//获取文件所有信息并且存入
 	Files tempFile;
 	tempFile.fileName = name;
 	tempFile.suffix = suffix;
