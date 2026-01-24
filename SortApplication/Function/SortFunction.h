@@ -16,6 +16,5 @@ public slots:
 
 private:
 	ManagerMent* manager;
-	ManagerMent* manager2;
 };
 

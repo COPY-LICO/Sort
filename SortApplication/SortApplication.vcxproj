@@ -97,6 +97,7 @@
     <QtUic Include="UI\SortApplication.ui" />
     <QtMoc Include="UI\SortApplication.h" />
     <ClCompile Include="Form\ManagerMent.cpp" />
+    <ClCompile Include="Function\SortFunction.cpp" />
     <ClCompile Include="Function\temp.cpp" />
     <ClCompile Include="UI\SortApplication.cpp" />
     <ClCompile Include="main.cpp" />
@@ -106,7 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form\Files.h" />
+    <ClInclude Include="Form\InfoGroup.h" />
     <ClInclude Include="Form\InfoGruop.h" />
+    <QtMoc Include="Function\SortFunction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
