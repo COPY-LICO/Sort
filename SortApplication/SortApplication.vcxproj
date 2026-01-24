@@ -98,7 +98,6 @@
     <QtMoc Include="UI\SortApplication.h" />
     <ClCompile Include="Form\ManagerMent.cpp" />
     <ClCompile Include="Function\SortFunction.cpp" />
-    <ClCompile Include="Function\temp.cpp" />
     <ClCompile Include="UI\SortApplication.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

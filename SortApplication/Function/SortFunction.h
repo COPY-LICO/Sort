@@ -12,7 +12,7 @@ public:
 
 public slots:
 	//分类槽函数 - 监听ManagerMent - StartOperator()信号
-	void SortFiles();
+	//void SortFiles();
 
 private:
 	ManagerMent* manager;
