@@ -4,6 +4,7 @@
 #include <qobject.h>
 #include <vector>
 #include "Files.h"
+#include "InfoGroup.h"
 //这是一个全局管理类，里面所有函数都采用单例形式，可在全局调用负责启动API接口
 
 class ManagerMent : public QObject
@@ -25,23 +26,36 @@ public:
 	bool DeleteLastFiles();
 	//返回后缀库引用
 	std::vector<QString>& GetBackSuffix();
+	//存入当前操作类型
+	bool SaveOperatorType(int,int);
+	//获取当前操作类型
+	InfoGroup* GetOperatorType();
 
-
-
-	//后缀名填充函数
-	static std::vector<QString> TheBackSuffix();
 
 	//调试代码 - 打印所有存入文件的信息
 	void PrintAllFilesInfo();
 	//调式代码 - 手动输入文件数据
 	void SaveFilesForTest(QString,QString,QString,QString,int);
 
+//信号函数
+signals:
+	//开始分类信号
+	void StartOperator();
+
+
+
 private:
+
 	//私有化构造函数防止类外实例化
 	ManagerMent(QObject* parent = nullptr);
+	//后缀名填充函数
+	static std::vector<QString> TheBackSuffix();
 	//文件储存器
 	std::vector<Files> _fileGroup;
 	//后缀库
 	std::vector<QString> _backSuffix;
+	//操作类型
+	InfoGroup infoGroup;
+
 };
 

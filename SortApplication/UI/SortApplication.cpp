@@ -7,6 +7,8 @@ SortApplication::SortApplication(QWidget* parent)
 {
     ui.setupUi(this);
 
+    //启动ManagerMent监听
+    ManagerMent* manager = ManagerMent::GetInstance();
 
     /*===================file_Widget===================*/
     
@@ -42,7 +44,6 @@ SortApplication::SortApplication(QWidget* parent)
 
     //设置默认状态
     ui.sortRadioButton->setChecked(true);
-    auto it = ManagerMent::GetInstance();
 
 
     /*===================sort_groupBox===================*/

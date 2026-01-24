@@ -100,6 +100,48 @@ int ManagerMent::GetNowFilesNum()
 	return _fileGroup.size();
 }
 
+bool ManagerMent::SaveOperatorType(int operatorForm, int operatorType)
+{
+
+	if (operatorForm == ChooseForm::Sort)
+	{
+		if (operatorType < 0 || operatorType > 4)
+		{
+			//operatorType输入错误
+			return false;
+		}
+
+		//选择分类操作
+		this->infoGroup.chooseForm = operatorForm;
+		this->infoGroup.sortType = operatorType;
+		this->infoGroup.renameType = chooseNull;//置空
+		return true;
+	}
+	else if (operatorForm == ChooseForm::Rename)
+	{
+		if (operatorType < 0 || operatorType > 3)
+		{
+			//operatorType输入错误
+			return false;
+		}
+
+		//选择重命名操作
+		this->infoGroup.chooseForm = operatorForm;
+		this->infoGroup.renameType = operatorType;
+		this->infoGroup.sortType = chooseNull;//置空
+		return true;
+	}
+
+	//operatorForm输入错误
+	return false;
+}
+
+InfoGroup* ManagerMent::GetOperatorType()
+{
+	//返回操作类型指针
+	return &(this->infoGroup);
+}
+
 vector<QString> ManagerMent::TheBackSuffix()
 {
 	//储存已有的后缀名
@@ -131,6 +173,7 @@ void ManagerMent::PrintAllFilesInfo()
 
 void ManagerMent::SaveFilesForTest(QString name, QString suffix, QString time, QString path, int size)
 {
+	//获取文件所有信息并且存入
 	Files tempFile;
 	tempFile.fileName = name;
 	tempFile.suffix = suffix;
