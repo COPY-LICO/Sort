@@ -11,15 +11,17 @@ class SortApplication : public QMainWindow
 public:
     SortApplication(QWidget* parent = nullptr);
     
-    //�¼���������������ͣ�¼�
+    //重写事件过滤器
     bool eventFilter(QObject* watched, QEvent* event) override;
     
+    //添加单个文件到列表
+    void AddFiletoItem(const QString &filePath);
     
     ~SortApplication();
 
 
 private slots:
-    //���ļ���
+    //打开文件
     void OpenFileDialog();
 
 private:

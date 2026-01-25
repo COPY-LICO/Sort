@@ -1,6 +1,10 @@
 #include "SortApplication.h"
 #include "ManagerMent.h"
 #include <QTimer>
+#include <QSize>
+#include <QListWidgetItem>
+#include <QFileIconProvider>
+
 
 SortApplication::SortApplication(QWidget* parent)
     : QMainWindow(parent)
@@ -79,6 +83,14 @@ SortApplication::SortApplication(QWidget* parent)
     connect(ui.suffix_radioButton, &QRadioButton::toggled, ui.suffix_Input, &QLineEdit::setEnabled);
     connect(ui.unifyName_radioButton, &QRadioButton::toggled, ui.unifyName_Input, &QLineEdit::setEnabled);
 
+
+    /*===================ListWidget===================*/
+    
+    //隐藏滚动条
+    ui.selectedFIles_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui.historyRecord_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+
 }
 
 //事件过滤器
@@ -100,22 +112,95 @@ bool SortApplication::eventFilter(QObject* watched, QEvent* event)
 //打开文件夹
 void SortApplication::OpenFileDialog()
 {
-    QString folderPath = QFileDialog::getOpenFileName(
+    QStringList filePaths = QFileDialog::getOpenFileNames(
         this,
         "choose files",
         QDir::homePath(),
         "All Files(*.*)"
       
     );
-    if (!folderPath.isEmpty())
-    {
-        qDebug() << "The path is:" << folderPath;
-        // 这里可以添加后续逻辑，比如显示路径到界面、读取文件夹内容等
-    }
 
+    //如果选中了文件，逐个添加到列表
+    if (!filePaths.isEmpty())
+    {
+        for (const QString& url : filePaths)
+        {
+            AddFiletoItem(url);            
+        }
+    }
 }
 
+void SortApplication::AddFiletoItem(const QString& filePath)
+{
 
+    //获取单例对象
+    ManagerMent* _manager = ManagerMent::GetInstance();
+
+    //存储文件
+    bool isSaved = _manager->SaveFiles(filePath);
+
+    if (isSaved)
+    {
+        QFileInfo fileInfo(filePath);
+
+
+        //创建列表项
+        QListWidgetItem* item = new QListWidgetItem(ui.selectedFIles_listWidget);
+        item->setSizeHint(QSize(0, 60));    //设置项宽自适应，高45
+
+
+        //创建自定义Widget来显示内容
+        QWidget* fileWidget = new QWidget();
+        QHBoxLayout* layout = new QHBoxLayout(fileWidget);  //水平排布
+        layout->setContentsMargins(8, 8, 8, 8);
+        layout->setSpacing(12);
+
+
+        //文件图标
+        QLabel* iconLabel = new QLabel();
+        QFileIconProvider iconProvider;
+        QIcon fileIcon = iconProvider.icon(fileInfo);
+        iconLabel->setPixmap(fileIcon.pixmap(32, 32));
+        layout->addWidget(iconLabel);
+
+
+        // 文件信息（名称+大小+类型）
+        QWidget* infoWidget = new QWidget();
+        QVBoxLayout* infoLayout = new QVBoxLayout(infoWidget);
+        infoLayout->setContentsMargins(0, 0, 0, 0);
+        infoLayout->setSpacing(2);
+
+
+        // 文件名（过长省略）
+        QLabel* nameLabel = new QLabel(fileInfo.fileName());
+        nameLabel->setStyleSheet("font-weight: bold; color: #333333;");
+        QString fileName = fileInfo.fileName();
+        QFontMetrics metrics(nameLabel->font());
+        QString elidedName = metrics.elidedText(fileName, Qt::ElideRight, 160); 
+        nameLabel->setText(elidedName);
+        infoLayout->addWidget(nameLabel);
+
+        // 文件大小+类型
+
+        double fileSizeKB = static_cast<double>(fileInfo.size()) / 1024.0;
+
+        QString sizeText = QString("%1 KB · %2")  
+            .arg(fileSizeKB, 0, 'f', 2)           
+            .arg(fileInfo.suffix().isEmpty() ? "Unknown type" : fileInfo.suffix().toLower());
+
+        QLabel* sizeTypeLabel = new QLabel(sizeText);
+        sizeTypeLabel->setStyleSheet("font-size: 12px; color: #666666; border: none;");
+        infoLayout->addWidget(sizeTypeLabel);
+
+        layout->addWidget(infoWidget);
+        layout->addStretch();
+
+        // 5. 将自定义Widget设置到列表项
+        ui.selectedFIles_listWidget->setItemWidget(item, fileWidget);
+
+
+    }
+}
 
 SortApplication::~SortApplication()
 {
