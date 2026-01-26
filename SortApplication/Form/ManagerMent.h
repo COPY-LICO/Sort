@@ -37,6 +37,9 @@ public:
 	//调式代码 - 手动输入文件数据
 	void SaveFilesForTest(QString,QString,QString,QString,int);
 
+	// 按文件名删除文件
+	bool DeleteFileByName(const QString& fileName);
+
 //信号函数
 signals:
 	//开始分类信号

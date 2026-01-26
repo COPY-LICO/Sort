@@ -23,7 +23,14 @@ public:
 private slots:
     //打开文件
     void OpenFileDialog();
+    //右键触发菜单
+    void OnCustomContextMenuRequested(const QPoint& pos);
+    // 右键删除item
+    void OnDeleteItemByRightClick();
+
 
 private:
     Ui::SortApplicationClass ui;
+    // 临时存储右键点击的item（用于删除）
+    QListWidgetItem* _rightClickedItem = nullptr;
 };

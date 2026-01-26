@@ -188,7 +188,7 @@ background-color: transparent;
            <rect>
             <x>20</x>
             <y>220</y>
-            <width>181</width>
+            <width>201</width>
             <height>31</height>
            </rect>
           </property>
@@ -203,10 +203,10 @@ color:rgb(0, 0, 0);
 }</string>
           </property>
           <property name="text">
-           <string>The File you Selected</string>
+           <string>The File you Selected (0)</string>
           </property>
          </widget>
-         <widget class="QListWidget" name="selectedFIles_listWidget">
+         <widget class="QListWidget" name="selectedFiles_listWidget">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -215,11 +215,11 @@ color:rgb(0, 0, 0);
             <height>180</height>
            </rect>
           </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
           <property name="horizontalScrollBarPolicy">
            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="itemAlignment">
-           <set>Qt::AlignmentFlag::AlignVertical_Mask</set>
           </property>
          </widget>
         </widget>

@@ -4,6 +4,7 @@
 #include <QSize>
 #include <QListWidgetItem>
 #include <QFileIconProvider>
+#include <QMenu> 
 
 
 SortApplication::SortApplication(QWidget* parent)
@@ -84,11 +85,19 @@ SortApplication::SortApplication(QWidget* parent)
     connect(ui.unifyName_radioButton, &QRadioButton::toggled, ui.unifyName_Input, &QLineEdit::setEnabled);
 
 
+
     /*===================ListWidget===================*/
     
     //隐藏滚动条
-    ui.selectedFIles_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui.selectedFiles_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui.historyRecord_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    //添加右键删除选中功能
+    //设置菜单右键列表自定义
+    ui.selectedFiles_listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    //绑定右键点击信号到槽函数
+    connect(ui.selectedFiles_listWidget, &QListWidget::customContextMenuRequested,
+        this, &SortApplication::OnCustomContextMenuRequested);
 
 
 }
@@ -145,8 +154,8 @@ void SortApplication::AddFiletoItem(const QString& filePath)
 
 
         //创建列表项
-        QListWidgetItem* item = new QListWidgetItem(ui.selectedFIles_listWidget);
-        item->setSizeHint(QSize(0, 60));    //设置项宽自适应，高45
+        QListWidgetItem* item = new QListWidgetItem(ui.selectedFiles_listWidget);
+        item->setSizeHint(QSize(0, 58));    //设置项宽自适应，高45
 
 
         //创建自定义Widget来显示内容
@@ -154,6 +163,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         QHBoxLayout* layout = new QHBoxLayout(fileWidget);  //水平排布
         layout->setContentsMargins(8, 8, 8, 8);
         layout->setSpacing(12);
+        fileWidget->setStyleSheet("background-color: transparent; border: none;");
 
 
         //文件图标
@@ -162,14 +172,14 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         QIcon fileIcon = iconProvider.icon(fileInfo);
         iconLabel->setPixmap(fileIcon.pixmap(32, 32));
         layout->addWidget(iconLabel);
-
+        iconLabel->setStyleSheet("background-color: transparent; border: none;");
 
         // 文件信息（名称+大小+类型）
         QWidget* infoWidget = new QWidget();
         QVBoxLayout* infoLayout = new QVBoxLayout(infoWidget);
         infoLayout->setContentsMargins(0, 0, 0, 0);
         infoLayout->setSpacing(2);
-
+        infoWidget->setStyleSheet("background-color: transparent; border: none;");
 
         // 文件名（过长省略）
         QLabel* nameLabel = new QLabel(fileInfo.fileName());
@@ -180,14 +190,13 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         nameLabel->setText(elidedName);
         infoLayout->addWidget(nameLabel);
 
-        // 文件大小+类型
 
+        // 文件大小+类型
         double fileSizeKB = static_cast<double>(fileInfo.size()) / 1024.0;
 
         QString sizeText = QString("%1 KB · %2")  
-            .arg(fileSizeKB, 0, 'f', 2)           
-            .arg(fileInfo.suffix().isEmpty() ? "Unknown type" : fileInfo.suffix().toLower());
-
+            .arg(fileSizeKB, 0, 'f', 2)          //大小 
+            .arg(fileInfo.suffix().isEmpty() ? "Unknown type" : fileInfo.suffix().toLower());   //类型
         QLabel* sizeTypeLabel = new QLabel(sizeText);
         sizeTypeLabel->setStyleSheet("font-size: 12px; color: #666666; border: none;");
         infoLayout->addWidget(sizeTypeLabel);
@@ -195,10 +204,108 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         layout->addWidget(infoWidget);
         layout->addStretch();
 
-        // 5. 将自定义Widget设置到列表项
-        ui.selectedFIles_listWidget->setItemWidget(item, fileWidget);
+        //将自定义Widget设置到列表项
+        ui.selectedFiles_listWidget->setItemWidget(item, fileWidget);
 
 
+        // 核心：仅保留一层淡灰外边框，选中无任何额外框
+        ui.selectedFiles_listWidget->setStyleSheet(R"(
+    /* 列表容器：无边框、透明背景，仅控制item间距 */
+    QListWidget {
+        border: none;
+        background-color: transparent;
+    }
+
+    /* item默认状态 */
+    QListWidget::item {
+        background-color: #FFFFFF;
+        border: 1px solid rgb(0, 170, 255); 
+        border-radius: 6px; 
+
+    }
+
+    /* 悬停状态 */
+    QListWidget::item:hover {
+        background-color: rgb(245,245,245);
+    }
+
+    /* 选中状态 */
+    QListWidget::item:selected,
+    QListWidget::item:selected:focus {
+        background-color: rgb(245,245,245); 
+        border: 1px solid rgb(0, 170, 255); 
+        outline: none; /* 去掉选中虚线框 */
+
+    }
+)");
+        //为item之间设置间距
+        ui.selectedFiles_listWidget->setSpacing(1);
+        // 保证item可选中，但无焦点虚线框（平衡交互和样式）
+        ui.selectedFiles_listWidget->setFocusPolicy(Qt::NoFocus);
+
+        //更新文件数量
+        ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
+    }
+}
+
+//右键触发菜单
+void SortApplication::OnCustomContextMenuRequested(const QPoint& pos)
+{
+    //右键点击的控件坐标转换为item坐标，找到对应的item
+    _rightClickedItem = ui.selectedFiles_listWidget->itemAt(pos);
+
+    //右键点击空白处不响应
+    if (!_rightClickedItem)
+    {
+        return;
+    }
+
+    //创建右键菜单，添加删除选项
+    QMenu menu(this); 
+    QAction* deleteAction = new QAction("Delete", &menu);
+    menu.addAction(deleteAction);
+
+    //绑定删除信号到槽函数
+    connect(deleteAction, &QAction::triggered, this, &SortApplication::OnDeleteItemByRightClick);
+
+    //在右键位置显示菜单
+    menu.exec(ui.selectedFiles_listWidget->mapToGlobal(pos));
+
+}
+
+// 右键删除item
+void SortApplication::OnDeleteItemByRightClick()
+{
+    if (_rightClickedItem == nullptr)
+    {
+        qDebug() << "There are no file items to be deleted.";
+        return;
+    }
+     
+    //获取右键点击对应文件信息
+    QWidget* itemWidget = ui.selectedFiles_listWidget->itemWidget(_rightClickedItem);
+    QLabel* nameLabel = itemWidget->findChild<QLabel*>();
+    if (!nameLabel)
+    {
+        qDebug() << "Unable to obtain the file name.";
+        return;
+    }
+    QString fileName = nameLabel->text();
+
+    //从ManagerMent中删除对应文件
+    ManagerMent* _manager = ManagerMent::GetInstance();
+    bool deleteSuccess = _manager->DeleteFileByName(fileName);
+
+    //删除成功
+    if (deleteSuccess)
+    {
+        //释放内存，删除UI中的item
+        delete itemWidget;
+        delete _rightClickedItem;
+        _rightClickedItem = nullptr;    //置空
+
+        //更新文件数量
+        ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
     }
 }
 

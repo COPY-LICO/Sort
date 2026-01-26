@@ -155,6 +155,20 @@ vector<QString> ManagerMent::TheBackSuffix()
 	};
 }
 
+// 按文件名删除文件
+bool ManagerMent::DeleteFileByName(const QString& fileName)
+{
+	for (auto it = _fileGroup.begin(); it != _fileGroup.end(); ++it)
+	{
+		if (it->fileName == fileName)
+		{
+			_fileGroup.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
 //以下为调试代码
 void ManagerMent::PrintAllFilesInfo()
 {
@@ -181,3 +195,4 @@ void ManagerMent::SaveFilesForTest(QString name, QString suffix, QString time, Q
 	tempFile.size = size;
 	this->_fileGroup.push_back(tempFile);
 }
+
