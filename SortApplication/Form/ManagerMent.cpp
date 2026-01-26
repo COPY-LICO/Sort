@@ -36,9 +36,11 @@ bool ManagerMent::SaveFiles(QString url)
 		//填入文件路径
 		tempfiles.filePath = url;
 		//填入文件名称
-		tempfiles.fileName = info.baseName();
+		tempfiles.prefix = info.baseName();
 		//填入文件后缀
 		tempfiles.suffix = info.suffix();
+		//填入文件名
+		tempfiles.fileName = info.fileName();
 		//填入文件修改日期
 		QDateTime tempTime = info.lastModified();
 		tempfiles.modifyTime = tempTime.toString("yyyy-MM-dd hh:mm:ss");
@@ -160,7 +162,7 @@ bool ManagerMent::DeleteFileByName(const QString& fileName)
 {
 	for (auto it = _fileGroup.begin(); it != _fileGroup.end(); ++it)
 	{
-		if (it->fileName == fileName)
+		if (it-> fileName== fileName)
 		{
 			_fileGroup.erase(it);
 			return true;

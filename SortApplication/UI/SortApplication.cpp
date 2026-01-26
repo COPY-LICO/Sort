@@ -184,6 +184,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         // 文件名（过长省略）
         QLabel* nameLabel = new QLabel(fileInfo.fileName());
         nameLabel->setStyleSheet("font-weight: bold; color: #333333;");
+        nameLabel->setObjectName("fileNameLabel"); // 关键：唯一标识
         QString fileName = fileInfo.fileName();
         QFontMetrics metrics(nameLabel->font());
         QString elidedName = metrics.elidedText(fileName, Qt::ElideRight, 160); 
@@ -199,6 +200,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
             .arg(fileInfo.suffix().isEmpty() ? "Unknown type" : fileInfo.suffix().toLower());   //类型
         QLabel* sizeTypeLabel = new QLabel(sizeText);
         sizeTypeLabel->setStyleSheet("font-size: 12px; color: #666666; border: none;");
+        sizeTypeLabel->setObjectName("fileSizeTypeLabel"); // 区分标识
         infoLayout->addWidget(sizeTypeLabel);
 
         layout->addWidget(infoWidget);
@@ -284,7 +286,7 @@ void SortApplication::OnDeleteItemByRightClick()
      
     //获取右键点击对应文件信息
     QWidget* itemWidget = ui.selectedFiles_listWidget->itemWidget(_rightClickedItem);
-    QLabel* nameLabel = itemWidget->findChild<QLabel*>();
+    QLabel* nameLabel = itemWidget->findChild<QLabel*>("fileNameLabel");
     if (!nameLabel)
     {
         qDebug() << "Unable to obtain the file name.";
@@ -307,6 +309,7 @@ void SortApplication::OnDeleteItemByRightClick()
         //更新文件数量
         ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
     }
+    
 }
 
 SortApplication::~SortApplication()
