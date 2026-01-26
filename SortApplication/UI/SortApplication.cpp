@@ -150,6 +150,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
 
     if (isSaved)
     {
+        _manager->PrintAllFilesInfo();
         QFileInfo fileInfo(filePath);
 
 
@@ -290,11 +291,13 @@ void SortApplication::OnDeleteItemByRightClick()
         qDebug() << "Unable to obtain the file name.";
         return;
     }
+
     QString fileName = nameLabel->text();
 
     //从ManagerMent中删除对应文件
     ManagerMent* _manager = ManagerMent::GetInstance();
     bool deleteSuccess = _manager->DeleteFileByName(fileName);
+    _manager->PrintAllFilesInfo();
 
     //删除成功
     if (deleteSuccess)
