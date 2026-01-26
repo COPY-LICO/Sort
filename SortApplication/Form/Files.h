@@ -4,9 +4,10 @@ struct Files
 {
 public:
 
-	QString fileName;
+	QString prefix;
 	QString suffix;
 	QString modifyTime;
 	QString filePath;
+	QString fileName;
 	int size;
 };
