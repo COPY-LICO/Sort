@@ -15,6 +15,22 @@ SortApplication::SortApplication(QWidget* parent)
     //启动ManagerMent监听
     ManagerMent* manager = ManagerMent::GetInstance();
 
+
+
+    // 获取当前窗口标志，移除最大化按钮标志，保留其他按钮
+    Qt::WindowFlags flags = this->windowFlags();
+    // 移除最大化按钮（Qt::WindowMaximizeButtonHint）
+    flags &= ~Qt::WindowMaximizeButtonHint;
+    // 保留最小化按钮（Qt::WindowMinimizeButtonHint）和关闭按钮（Qt::WindowCloseButtonHint）
+    flags |= Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint;
+    // 应用新的窗口标志
+    this->setWindowFlags(flags);
+
+    // 刷新窗口（设置标志后需调用show确保生效）
+    this->show();
+
+
+
     /*===================file_Widget===================*/
     
     //实现点击fileSelectorWidget与iconLabel_CloudRecord、textLabel_select1、textLabel_select2任意一个都打开文件夹：
@@ -132,6 +148,8 @@ void SortApplication::OpenFileDialog()
     //如果选中了文件，逐个添加到列表
     if (!filePaths.isEmpty())
     {
+        bool is_saved = false;
+
         for (const QString& url : filePaths)
         {
             AddFiletoItem(url);            
@@ -144,6 +162,12 @@ void SortApplication::AddFiletoItem(const QString& filePath)
 
     //获取单例对象
     ManagerMent* _manager = ManagerMent::GetInstance();
+
+    //重复存储直接返回
+     if (_manager->IsFileExistByPath(filePath))
+    {
+         return;
+    }
 
     //存储文件
     bool isSaved = _manager->SaveFiles(filePath);
@@ -188,7 +212,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         QString fileName = fileInfo.fileName();
         QFontMetrics metrics(nameLabel->font());
         QString elidedName = metrics.elidedText(fileName, Qt::ElideRight, 160); 
-        nameLabel->setText(elidedName);
+        //nameLabel->setText(elidedName);
         infoLayout->addWidget(nameLabel);
 
 
@@ -297,7 +321,7 @@ void SortApplication::OnDeleteItemByRightClick()
     //从ManagerMent中删除对应文件
     ManagerMent* _manager = ManagerMent::GetInstance();
     bool deleteSuccess = _manager->DeleteFileByName(fileName);
-
+    qDebug() << deleteSuccess;
     //删除成功
     if (deleteSuccess)
     {

@@ -157,6 +157,22 @@ vector<QString> ManagerMent::TheBackSuffix()
 	};
 }
 
+//判断文件是否重复
+bool ManagerMent::IsFileExistByPath(const QString& filePath)
+{
+	if (_fileGroup.empty())
+		return false;
+
+	for (auto it = _fileGroup.begin(); it != _fileGroup.end(); ++it)
+	{
+		if (it->filePath == filePath)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 // 按文件名删除文件
 bool ManagerMent::DeleteFileByName(const QString& fileName)
 {
