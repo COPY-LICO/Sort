@@ -5,6 +5,7 @@
 #include <QListWidgetItem>
 #include <QFileIconProvider>
 #include <QMenu> 
+#include <QMessageBox>
 
 
 SortApplication::SortApplication(QWidget* parent)
@@ -294,6 +295,14 @@ void SortApplication::OnCustomContextMenuRequested(const QPoint& pos)
     //绑定删除信号到槽函数
     connect(deleteAction, &QAction::triggered, this, &SortApplication::OnDeleteItemByRightClick);
 
+    //添加清空选项
+    QAction* clearAction = new QAction("Clear", &menu);
+    menu.addAction(clearAction);
+
+    //绑定清空信号到槽函数
+    connect(clearAction, &QAction::triggered, this, &SortApplication::OnClearItemByRightClick);
+
+
     //在右键位置显示菜单
     menu.exec(ui.selectedFiles_listWidget->mapToGlobal(pos));
 
@@ -334,6 +343,51 @@ void SortApplication::OnDeleteItemByRightClick()
         ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
     }
     
+}
+
+//右键清空所有item
+void SortApplication::OnClearItemByRightClick()
+{
+    if (_rightClickedItem == nullptr)
+    {
+        qDebug() << "There are no file items to be deleted.";
+        return;
+    }
+
+    //添加弹窗，防止误操作
+    int ret = QMessageBox::question(
+        this,
+        "Confirm to clear",
+        "Are you sure you want to clear it?",
+        QMessageBox::Yes | QMessageBox::No,
+        QMessageBox::No
+    );
+    if (ret != QMessageBox::Yes)
+    {
+        return;
+    }
+
+    //清空_fileGroup
+    ManagerMent* _manager = ManagerMent::GetInstance();
+    _manager->ClearAllFiles();
+
+    //清空UI中的所有item
+    while (ui.selectedFiles_listWidget->count() > 0)
+    {
+        QListWidgetItem* item = ui.selectedFiles_listWidget->takeItem(0);
+        QWidget* itemWidget = ui.selectedFiles_listWidget->itemWidget(item);
+        if (itemWidget)
+        {
+            delete itemWidget;
+        }
+        delete item;
+    }
+
+    //清空临时变量
+    _rightClickedItem = nullptr;
+
+    //更新文件数量
+    ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
 }
 
 SortApplication::~SortApplication()

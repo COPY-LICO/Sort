@@ -41,6 +41,8 @@ public:
 	bool IsFileExistByPath(const QString& filePath);
 	// 按文件名删除文件
 	bool DeleteFileByName(const QString& fileName);
+	//清空所有文件
+	void ClearAllFiles();
 
 //信号函数
 signals:

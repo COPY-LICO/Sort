@@ -187,6 +187,12 @@ bool ManagerMent::DeleteFileByName(const QString& fileName)
 	return false;
 }
 
+//清空所有文件
+void ManagerMent::ClearAllFiles()
+{
+	_fileGroup.clear();
+}
+
 //以下为调试代码
 void ManagerMent::PrintAllFilesInfo()
 {
