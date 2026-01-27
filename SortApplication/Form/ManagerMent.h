@@ -28,8 +28,12 @@ public:
 	std::vector<QString>& GetBackSuffix();
 	//存入当前操作类型
 	bool SaveOperatorType(int,int);
+	//存入当前操作内容
+	bool SaveOperatorContent(QString, QString, QString, QString, int);
 	//获取当前操作类型
 	InfoGroup* GetOperatorType();
+	//获取当前操作内容细节
+	DetailInfo* GetOperatorContent();
 
 
 	//调试代码 - 打印所有存入文件的信息
@@ -37,8 +41,12 @@ public:
 	//调式代码 - 手动输入文件数据
 	void SaveFilesForTest(QString,QString,QString,QString,int);
 
+	//判断文件是否重复
+	bool IsFileExistByPath(const QString& filePath);
 	// 按文件名删除文件
 	bool DeleteFileByName(const QString& fileName);
+	//清空所有文件
+	void ClearAllFiles();
 
 //信号函数
 signals:
@@ -57,8 +65,9 @@ private:
 	std::vector<Files> _fileGroup;
 	//后缀库
 	std::vector<QString> _backSuffix;
-	//操作类型
-	InfoGroup infoGroup;
+	//操作内容
+	InfoGroup infoGroup; // 操作类型
+	DetailInfo detailGroup; // 操作细节
 
 };
 

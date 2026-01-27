@@ -27,7 +27,8 @@ private slots:
     void OnCustomContextMenuRequested(const QPoint& pos);
     // 右键删除item
     void OnDeleteItemByRightClick();
-
+    //右键清空所有item
+    void OnClearItemByRightClick();
 
 private:
     Ui::SortApplicationClass ui;

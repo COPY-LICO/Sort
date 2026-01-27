@@ -26,6 +26,12 @@ eg: `manager->SaveOperatorType(0,0);`
 `InfoGroup* GetOperatorType()` 来获取当前选择的操作类型，操作类型详见InfoGroup结构体  
 eg: `InfoGroup* info = manager->GetOperatorType();`
 
+`DetailInfo* GetOperatorContent()` 来获取当前选择的操作类型的输入信息，操作类型详见InfoGroup结构体  
+eg: `DetailInfo* info = manager->GetOperatorContent();`  
+
+`bool SaveOperatorContent(QString, QString, QString, QString, int)` 来存入当前文本框的内容，只需在分类信号激活前调用一次即可  
+eg: `manager->SaveOperatorContent(startTime,endTime,fileType,fileName,midSize);` 若不具有内容则传入空""  
+
 
 -------  
 
@@ -69,3 +75,13 @@ enum RenameType
 };  
 
 `chooseNull = -1 表示没有任何的选择`  
+
+------
+
+**DetailInfo结构体内容**
+
+`QString startTime` 筛选时间区间 - 开始  
+`QString endTime`   筛选时间区间 - 结束  
+`QString suffixDetail` 筛选文件类型  
+`int midsize` 分隔大小  
+`QString nameContentDetail` 筛选的文本内容  

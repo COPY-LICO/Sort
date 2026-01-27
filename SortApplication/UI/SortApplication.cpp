@@ -5,6 +5,7 @@
 #include <QListWidgetItem>
 #include <QFileIconProvider>
 #include <QMenu> 
+#include <QMessageBox>
 
 
 SortApplication::SortApplication(QWidget* parent)
@@ -14,6 +15,22 @@ SortApplication::SortApplication(QWidget* parent)
 
     //启动ManagerMent监听
     ManagerMent* manager = ManagerMent::GetInstance();
+
+
+
+    // 获取当前窗口标志，移除最大化按钮标志，保留其他按钮
+    Qt::WindowFlags flags = this->windowFlags();
+    // 移除最大化按钮（Qt::WindowMaximizeButtonHint）
+    flags &= ~Qt::WindowMaximizeButtonHint;
+    // 保留最小化按钮（Qt::WindowMinimizeButtonHint）和关闭按钮（Qt::WindowCloseButtonHint）
+    flags |= Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint;
+    // 应用新的窗口标志
+    this->setWindowFlags(flags);
+
+    // 刷新窗口（设置标志后需调用show确保生效）
+    this->show();
+
+
 
     /*===================file_Widget===================*/
     
@@ -132,6 +149,8 @@ void SortApplication::OpenFileDialog()
     //如果选中了文件，逐个添加到列表
     if (!filePaths.isEmpty())
     {
+        bool is_saved = false;
+
         for (const QString& url : filePaths)
         {
             AddFiletoItem(url);            
@@ -144,6 +163,12 @@ void SortApplication::AddFiletoItem(const QString& filePath)
 
     //获取单例对象
     ManagerMent* _manager = ManagerMent::GetInstance();
+
+    //重复存储直接返回
+     if (_manager->IsFileExistByPath(filePath))
+    {
+         return;
+    }
 
     //存储文件
     bool isSaved = _manager->SaveFiles(filePath);
@@ -189,7 +214,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         QString fileName = fileInfo.fileName();
         QFontMetrics metrics(nameLabel->font());
         QString elidedName = metrics.elidedText(fileName, Qt::ElideRight, 160); 
-        nameLabel->setText(elidedName);
+        //nameLabel->setText(elidedName);
         infoLayout->addWidget(nameLabel);
 
 
@@ -271,6 +296,14 @@ void SortApplication::OnCustomContextMenuRequested(const QPoint& pos)
     //绑定删除信号到槽函数
     connect(deleteAction, &QAction::triggered, this, &SortApplication::OnDeleteItemByRightClick);
 
+    //添加清空选项
+    QAction* clearAction = new QAction("Clear", &menu);
+    menu.addAction(clearAction);
+
+    //绑定清空信号到槽函数
+    connect(clearAction, &QAction::triggered, this, &SortApplication::OnClearItemByRightClick);
+
+
     //在右键位置显示菜单
     menu.exec(ui.selectedFiles_listWidget->mapToGlobal(pos));
 
@@ -299,8 +332,7 @@ void SortApplication::OnDeleteItemByRightClick()
     //从ManagerMent中删除对应文件
     ManagerMent* _manager = ManagerMent::GetInstance();
     bool deleteSuccess = _manager->DeleteFileByName(fileName);
-    _manager->PrintAllFilesInfo();
-
+    qDebug() << deleteSuccess;
     //删除成功
     if (deleteSuccess)
     {
@@ -312,7 +344,52 @@ void SortApplication::OnDeleteItemByRightClick()
         //更新文件数量
         ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
     }
-    _manager->PrintAllFilesInfo();
+    
+}
+
+//右键清空所有item
+void SortApplication::OnClearItemByRightClick()
+{
+    if (_rightClickedItem == nullptr)
+    {
+        qDebug() << "There are no file items to be deleted.";
+        return;
+    }
+
+    //添加弹窗，防止误操作
+    int ret = QMessageBox::question(
+        this,
+        "Confirm to clear",
+        "Are you sure you want to clear it?",
+        QMessageBox::Yes | QMessageBox::No,
+        QMessageBox::No
+    );
+    if (ret != QMessageBox::Yes)
+    {
+        return;
+    }
+
+    //清空_fileGroup
+    ManagerMent* _manager = ManagerMent::GetInstance();
+    _manager->ClearAllFiles();
+
+    //清空UI中的所有item
+    while (ui.selectedFiles_listWidget->count() > 0)
+    {
+        QListWidgetItem* item = ui.selectedFiles_listWidget->takeItem(0);
+        QWidget* itemWidget = ui.selectedFiles_listWidget->itemWidget(item);
+        if (itemWidget)
+        {
+            delete itemWidget;
+        }
+        delete item;
+    }
+
+    //清空临时变量
+    _rightClickedItem = nullptr;
+
+    //更新文件数量
+    ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
 }
 
 SortApplication::~SortApplication()

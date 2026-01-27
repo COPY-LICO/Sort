@@ -144,6 +144,12 @@ InfoGroup* ManagerMent::GetOperatorType()
 	return &(this->infoGroup);
 }
 
+DetailInfo* ManagerMent::GetOperatorContent()
+{
+	//返回操作内容指针
+	return &(this->detailGroup);
+}
+
 vector<QString> ManagerMent::TheBackSuffix()
 {
 	//储存已有的后缀名
@@ -155,6 +161,22 @@ vector<QString> ManagerMent::TheBackSuffix()
 		".cpp", ".h", ".py", "md",
 		".log", ".xml", ".json"
 	};
+}
+
+//判断文件是否重复
+bool ManagerMent::IsFileExistByPath(const QString& filePath)
+{
+	if (_fileGroup.empty())
+		return false;
+
+	for (auto it = _fileGroup.begin(); it != _fileGroup.end(); ++it)
+	{
+		if (it->filePath == filePath)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 // 按文件名删除文件
@@ -172,6 +194,23 @@ bool ManagerMent::DeleteFileByName(const QString& fileName)
 		}
 	}
 	return false;
+}
+
+//清空所有文件
+void ManagerMent::ClearAllFiles()
+{
+	_fileGroup.clear();
+}
+
+//存入分类操作类型文本框的内容 - 默认全部为空 - 在点击开始按钮发送分类命令前调用
+bool ManagerMent::SaveOperatorContent(QString startTime = "", QString endTime = "", QString suffixDetail = "", QString nameContentDetail = "", int midSize = -1)
+{
+	this->detailGroup.startTime = startTime;
+	this->detailGroup.endTime = endTime;
+	this->detailGroup.suffixDetail = suffixDetail;
+	this->detailGroup.nameContentDetail = nameContentDetail;
+	this->detailGroup.midsize = midSize;
+	return true;
 }
 
 //以下为调试代码
