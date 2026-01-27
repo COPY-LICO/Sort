@@ -312,7 +312,7 @@ void SortApplication::OnDeleteItemByRightClick()
         //更新文件数量
         ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
     }
-    
+    _manager->PrintAllFilesInfo();
 }
 
 SortApplication::~SortApplication()

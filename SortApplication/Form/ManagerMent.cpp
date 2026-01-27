@@ -160,9 +160,12 @@ vector<QString> ManagerMent::TheBackSuffix()
 // 按文件名删除文件
 bool ManagerMent::DeleteFileByName(const QString& fileName)
 {
+	qDebug() << "ManagerMent:";
+	this->PrintAllFilesInfo();
 	for (auto it = _fileGroup.begin(); it != _fileGroup.end(); ++it)
 	{
-		if (it-> fileName== fileName)
+		qDebug() << it->fileName << ":" << fileName << "\n";
+		if (it-> fileName == fileName)
 		{
 			_fileGroup.erase(it);
 			return true;
