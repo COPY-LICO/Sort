@@ -24,6 +24,7 @@ ManagerMent* ManagerMent::GetInstance()
 	return &instance;
 }
 
+//url为文件路径
 bool ManagerMent::SaveFiles(QString url)
 {
 	//获取存入文件信息
@@ -102,6 +103,7 @@ int ManagerMent::GetNowFilesNum()
 	return _fileGroup.size();
 }
 
+//operatorForm为选择的模式，operatorType为该模式下选择的方案。若不传入参数则执行为初始化，返回值false
 bool ManagerMent::SaveOperatorType(int operatorForm, int operatorType)
 {
 
@@ -132,6 +134,14 @@ bool ManagerMent::SaveOperatorType(int operatorForm, int operatorType)
 		this->infoGroup.renameType = operatorType;
 		this->infoGroup.sortType = chooseNull;//置空
 		return true;
+	}
+	else if (operatorForm == chooseNull && operatorType == chooseNull)
+	{
+		//初始化 返回false
+		this->infoGroup.chooseForm = chooseNull;
+		this->infoGroup.renameType = chooseNull;
+		this->infoGroup.sortType = chooseNull;
+		return false;
 	}
 
 	//operatorForm输入错误
@@ -182,8 +192,8 @@ bool ManagerMent::IsFileExistByPath(const QString& filePath)
 // 按文件名删除文件
 bool ManagerMent::DeleteFileByName(const QString& fileName)
 {
-	qDebug() << "ManagerMent:";
-	this->PrintAllFilesInfo();
+	//qDebug() << "ManagerMent:";
+	//this->PrintAllFilesInfo();
 	for (auto it = _fileGroup.begin(); it != _fileGroup.end(); ++it)
 	{
 		qDebug() << it->fileName << ":" << fileName << "\n";
@@ -203,14 +213,31 @@ void ManagerMent::ClearAllFiles()
 }
 
 //存入分类操作类型文本框的内容 - 默认全部为空 - 在点击开始按钮发送分类命令前调用
-bool ManagerMent::SaveOperatorContent(QString startTime = "", QString endTime = "", QString suffixDetail = "", QString nameContentDetail = "", int midSize = -1)
+//不输入任何数据表明初始化后端数据
+//返回false表明初始化，返回true表明赋值成功
+bool ManagerMent::SaveOperatorContent(bool byYear, bool byYear_Month, int largeFile, int smallFile, QString sortName, std::vector<QString> tempType)
 {
-	this->detailGroup.startTime = startTime;
-	this->detailGroup.endTime = endTime;
-	this->detailGroup.suffixDetail = suffixDetail;
-	this->detailGroup.nameContentDetail = nameContentDetail;
-	this->detailGroup.midsize = midSize;
-	return true;
+	if (byYear != false || byYear_Month != false || largeFile > 0 || smallFile > 0 || !tempType.empty() == true)
+	{
+		this->detailGroup.byYear = byYear;
+		this->detailGroup.byYear_Month = byYear_Month;
+		this->detailGroup.largeFile = largeFile;
+		this->detailGroup.smallFile = smallFile;
+		this->detailGroup.typeGroup = tempType;
+		this->detailGroup.sortName = sortName;
+		return true; // 赋值成功
+	}
+	else
+	{
+		this->detailGroup.byYear = byYear;
+		this->detailGroup.byYear_Month = byYear_Month;
+		this->detailGroup.largeFile = largeFile;
+		this->detailGroup.smallFile = smallFile;
+		this->detailGroup.typeGroup = tempType;
+		this->detailGroup.sortName = sortName;
+		return false; // 初始化成功
+	}
+	return false;
 }
 
 //以下为调试代码
@@ -221,7 +248,7 @@ void ManagerMent::PrintAllFilesInfo()
 
 	for (int i = this->GetNowFilesNum(); i > 0; i--)
 	{
-		qDebug() << (*fileIt).fileName << "   " << (*fileIt).suffix << "   " << (*fileIt).modifyTime << "    " << (*fileIt).size << "   " << (*fileIt).filePath << "\n";
+		qDebug() << (*fileIt).fileName << "   " << (*fileIt).suffix << "   " << (*fileIt).modifyTime << "    " << (*fileIt).size << "   " << (*fileIt).filePath;
 		if (fileIt != this->_fileGroup.begin())
 		{
 			fileIt--;
@@ -229,6 +256,7 @@ void ManagerMent::PrintAllFilesInfo()
 	}
 }
 
+//手动存入文件数据
 void ManagerMent::SaveFilesForTest(QString name, QString suffix, QString time, QString path, int size)
 {
 	Files tempFile;
@@ -240,3 +268,19 @@ void ManagerMent::SaveFilesForTest(QString name, QString suffix, QString time, Q
 	this->_fileGroup.push_back(tempFile);
 }
 
+//打印目前的操作内容
+void ManagerMent::PrintAllOperation()
+{
+	qDebug() << "选择的操作类型：" << this->infoGroup.chooseForm;
+	qDebug() << "采用的分类模式：" << this->infoGroup.sortType;
+	qDebug() << "采用的重命名模式：" << this->infoGroup.renameType;
+	qDebug() << "分类操作细节" << '\n' << "启用时间间隔状态：" << "按年份：" << this->detailGroup.byYear << "     按月份" << this->detailGroup.byYear_Month;
+	qDebug() << "已读取的文件类型:";
+	for (const QString& temp : this->detailGroup.typeGroup)
+		qDebug() << temp << "   ";
+
+	qDebug() << "划分大小参数：" << "large：" << this->detailGroup.largeFile << "    " << "small: " << this->detailGroup.smallFile;
+	qDebug() << "已经读取的文件名：" << this->detailGroup.sortName;
+	
+	// qDebug() << "重命名操作细节" << '\n' << 
+}

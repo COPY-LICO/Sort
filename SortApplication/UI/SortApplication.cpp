@@ -333,7 +333,6 @@ void SortApplication::AddFiletoItem(const QString& filePath)
 
     //存储文件
     bool isSaved = _manager->SaveFiles(filePath);
-    _manager->PrintAllFilesInfo();
 
     if (isSaved)
     {

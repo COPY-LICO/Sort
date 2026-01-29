@@ -26,10 +26,10 @@ public:
 	bool DeleteLastFiles();
 	//返回后缀库引用
 	std::vector<QString>& GetBackSuffix();
-	//存入当前操作类型
-	bool SaveOperatorType(int,int);
-	//存入当前操作内容
-	bool SaveOperatorContent(QString, QString, QString, QString, int);
+	//存入当前操作类型 - 无参数传入为初始化操作类型
+	bool SaveOperatorType(int = chooseNull,int = chooseNull);
+	//存入当前操作内容 - 无参数传入为初始化操作内容
+	bool SaveOperatorContent(bool = false,bool = false,int = chooseNull,int = chooseNull,QString = "", std::vector<QString> = {});
 	//获取当前操作类型
 	InfoGroup* GetOperatorType();
 	//获取当前操作内容细节
@@ -40,6 +40,8 @@ public:
 	void PrintAllFilesInfo();
 	//调式代码 - 手动输入文件数据
 	void SaveFilesForTest(QString,QString,QString,QString,int);
+	//调式代码 - 打印识别的操作内容
+	void PrintAllOperation();
 
 	//判断文件是否重复
 	bool IsFileExistByPath(const QString& filePath);

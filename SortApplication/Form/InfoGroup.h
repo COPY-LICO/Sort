@@ -36,13 +36,14 @@ public:
 struct DetailInfo
 {
 public:
-	//时间分类 - 筛选区间
-	QString startTime;
-	QString endTime;
-	//类型分类 - 筛选类型
-	QString suffixDetail;//单类型
-	//大小分类 - 划分大小
-	int midsize;
-	//名称分类 - 筛选名称内的特定信息
-	QString nameContentDetail;
+	//时间点方案
+	bool byYear = false;
+	bool byYear_Month = false;
+	//类型方案
+	std::vector<QString> typeGroup = {};
+	//大小方案
+	int largeFile = chooseNull;
+	int smallFile = chooseNull;
+	//名称方案
+	QString sortName = "";
 };
