@@ -6,7 +6,9 @@
 #include <QFileIconProvider>
 #include <QMenu> 
 #include <QMessageBox>
-
+#include <QScrollArea>
+#include <QCheckBox>
+#include <QButtonGroup>
 
 SortApplication::SortApplication(QWidget* parent)
     : QMainWindow(parent)
@@ -30,6 +32,9 @@ SortApplication::SortApplication(QWidget* parent)
     // 刷新窗口（设置标志后需调用show确保生效）
     this->show();
 
+
+       //文件分类类型面板调用
+    InitFileTypePanel();
 
 
     /*===================file_Widget===================*/
@@ -56,13 +61,56 @@ SortApplication::SortApplication(QWidget* parent)
     connect(ui.sortRadioButton, &QRadioButton::toggled, this, [=](bool checked) {
         if (checked) {
             ui.stackedWidget->setCurrentIndex(0);
+
+            // 1. 清空Rename组所有RadioButton选中状态
+            ui.prefix_radioButton->setChecked(false);
+            ui.suffix_radioButton->setChecked(false);
+            ui.unifyName_radioButton->setChecked(false);
+
+            // 2. 禁用Rename组所有输入框 + 清空内容
+            ui.prefix_Input->setEnabled(false);
+            ui.suffix_Input->setEnabled(false);
+            ui.unifyName_Input->setEnabled(false);
+            ui.prefix_Input->clear();
+            ui.suffix_Input->clear();
+            ui.unifyName_Input->clear();
         }
-    });
+        });
     connect(ui.renameRadioButton, &QRadioButton::toggled, this, [=](bool checked) {
         if (checked) {
             ui.stackedWidget->setCurrentIndex(1);
+
+            //清空Sort组所有RadioButton选中状态
+            ui.size_radioButton->setChecked(false);
+            ui.time_radioButton->setChecked(false);
+            ui.type_radioButton->setChecked(false);
+            ui.name_radioButton->setChecked(false);
+
+            //禁用并清空name输入框
+            ui.nameSort_Input->setEnabled(false);
+            ui.nameSort_Input->clear();
+
+            //禁用并清空size输入框
+            ui.fileSizeSmall_Input->setEnabled(false);
+            ui.fileSizeSmall_Input->clear();
+            ui.fileSizeLarge_Input->setEnabled(false);
+            ui.fileSizeLarge_Input->clear();
+
+            //清空/禁用time分组下的子RadioButton
+            ui.byYear_radioButton->setChecked(false);
+            ui.byYear_radioButton->setEnabled(false);
+            ui.byYear_radioButton->setCheckable(false);
+            ui.byMonth_radioButton->setChecked(false);
+            ui.byMonth_radioButton->setEnabled(false);
+            ui.byMonth_radioButton->setCheckable(false);
+
+            //清空/禁用type分组下的所有复选框
+            for (QCheckBox* checkBox : _typeCheckBoxList) {
+                checkBox->setChecked(false);
+                checkBox->setEnabled(false);
+            }
         }
-    });
+        });
 
     //设置默认状态
     ui.sortRadioButton->setChecked(true);
@@ -80,16 +128,30 @@ SortApplication::SortApplication(QWidget* parent)
     // 1. 设置输入框默认状态：单选按钮未选中，输入框禁用
     ui.nameSort_Input->setEnabled(false);
 
+   //选中其他RadioButton时清空nameSort_Input
+        auto clearNameInput = [=]() {
+        ui.nameSort_Input->clear();
+        ui.nameSort_Input->setEnabled(false);
+        };
+
+
     // 2. 绑定信号槽   
-    connect(ui.name_radioButton, &QRadioButton::toggled, ui.nameSort_Input, &QLineEdit::setEnabled);
+    // name RadioButton选中时启用输入框（内容不清空，仅切换其他时清空）
+    connect(ui.name_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
+        ui.nameSort_Input->setEnabled(checked);
+        qDebug() << ui.byYear_radioButton->isChecked();
+        if (!checked) clearNameInput();
+    });
 
 
-    //rename_groupBox
+
+
+    /*===================rename_groupBox===================*/
     //设置全部按钮默认状态
     ui.prefix_radioButton->setChecked(false);
     ui.suffix_radioButton->setChecked(false);
     ui.unifyName_radioButton->setChecked(false);
-
+    
     //连接三个radioButton和三个LineEdit输入框，前者选中后者才可输入：
     // 1. 设置输入框默认状态：单选按钮未选中，输入框禁用
     ui.prefix_Input->setEnabled(false);
@@ -100,6 +162,75 @@ SortApplication::SortApplication(QWidget* parent)
     connect(ui.prefix_radioButton, &QRadioButton::toggled, ui.prefix_Input, &QLineEdit::setEnabled);
     connect(ui.suffix_radioButton, &QRadioButton::toggled, ui.suffix_Input, &QLineEdit::setEnabled);
     connect(ui.unifyName_radioButton, &QRadioButton::toggled, ui.unifyName_Input, &QLineEdit::setEnabled);
+
+    // 选中prefix时，清空另外两个输入框
+    connect(ui.prefix_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
+        if (checked) {
+            ui.suffix_Input->clear();
+            ui.unifyName_Input->clear();
+            ui.prefix_Input->setEnabled(true);
+            ui.suffix_Input->setEnabled(false);
+            ui.unifyName_Input->setEnabled(false);
+        }
+        else if (!ui.suffix_radioButton->isChecked() && !ui.unifyName_radioButton->isChecked()) {
+            ui.prefix_Input->clear();
+            ui.prefix_Input->setEnabled(false);
+        }
+        });
+
+    // 选中suffix时，清空另外两个输入框
+    connect(ui.suffix_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
+        if (checked) {
+            ui.prefix_Input->clear();
+            ui.unifyName_Input->clear();
+            ui.suffix_Input->setEnabled(true);
+            ui.prefix_Input->setEnabled(false);
+            ui.unifyName_Input->setEnabled(false);
+        }
+        else if (!ui.prefix_radioButton->isChecked() && !ui.unifyName_radioButton->isChecked()) {
+            ui.suffix_Input->clear();
+            ui.suffix_Input->setEnabled(false);
+        }
+        });
+
+    // 选中unifyName时，清空另外两个输入框
+    connect(ui.unifyName_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
+        if (checked) {
+            ui.prefix_Input->clear();
+            ui.suffix_Input->clear();
+            ui.unifyName_Input->setEnabled(true);
+            ui.prefix_Input->setEnabled(false);
+            ui.suffix_Input->setEnabled(false);
+        }
+        else if (!ui.prefix_radioButton->isChecked() && !ui.suffix_radioButton->isChecked()) {
+            ui.unifyName_Input->clear();
+            ui.unifyName_Input->setEnabled(false);
+        }
+        });
+
+
+    /*===================time_groupBox===================*/
+ 
+    ui.byYear_radioButton->setChecked(false);
+    ui.byMonth_radioButton->setChecked(false);
+
+    //绑定信号槽
+    connect(ui.time_radioButton, &QRadioButton::toggled, [=](bool checked) {
+        ui.byYear_radioButton->setEnabled(ui.time_radioButton->isChecked());
+        ui.byYear_radioButton->setCheckable(ui.time_radioButton->isChecked());
+        if (!ui.time_radioButton->isChecked()) {
+            ui.byYear_radioButton->setChecked(false);
+        }
+        });
+
+    connect(ui.time_radioButton, &QRadioButton::toggled, [=](bool checked) {
+        ui.byMonth_radioButton->setEnabled(ui.time_radioButton->isChecked());
+        ui.byMonth_radioButton->setCheckable(ui.time_radioButton->isChecked());
+        if (!ui.time_radioButton->isChecked()) {
+            ui.byMonth_radioButton->setChecked(false);
+        }
+        });
+
 
 
 
@@ -115,6 +246,36 @@ SortApplication::SortApplication(QWidget* parent)
     //绑定右键点击信号到槽函数
     connect(ui.selectedFiles_listWidget, &QListWidget::customContextMenuRequested,
         this, &SortApplication::OnCustomContextMenuRequested);
+
+
+    /*===================size_groupBox===================*/
+
+
+    //连接size_radioButton和两个size_Input，只有选中前者，后者才可输入：
+    //设置输入框默认状态：单选按钮未选中，输入框禁用
+    ui.fileSizeSmall_Input->setEnabled(false);
+    ui.fileSizeLarge_Input->setEnabled(false);
+
+    //选中其他RadioButton时清空
+    auto clearSmallSizeInput = [=]() {
+        ui.fileSizeSmall_Input->clear();
+        ui.fileSizeSmall_Input->setEnabled(false);
+        };
+    auto clearLargeSizeInput = [=]() {
+        ui.fileSizeLarge_Input->clear();
+        ui.fileSizeLarge_Input->setEnabled(false);
+        };
+
+    //绑定信号槽   
+    connect(ui.size_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
+        ui.fileSizeSmall_Input->setEnabled(checked);
+        if (!checked) clearSmallSizeInput();
+        });
+    connect(ui.size_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
+        ui.fileSizeLarge_Input->setEnabled(checked);
+        if (!checked) clearLargeSizeInput();
+        });
+
 
 
 }
@@ -392,6 +553,105 @@ void SortApplication::OnClearItemByRightClick()
     //更新文件数量
     ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
 }
+
+//文件类型分类面板
+void SortApplication::InitFileTypePanel()
+{
+    // 连接信号槽
+    connect(ui.type_radioButton, &QRadioButton::toggled, this, &SortApplication::OnFileTypeCheckBoxToggled);
+
+
+    // 创建滚动区域内容容器并绑定到scrollArea
+    QWidget* scrollContent = new QWidget(ui.fileTypes_scrollArea);
+    QGridLayout* contentLayout = new QGridLayout(scrollContent);
+    contentLayout->setContentsMargins(10, 10, 10, 10);
+    contentLayout->setSpacing(12); // 调整间距，避免分散
+    contentLayout->setRowStretch(0, 0); // 取消自动拉伸，紧凑排布
+
+
+    // 设置滚动区域样式
+    ui.fileTypes_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 隐藏垂直滚动条
+    ui.fileTypes_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 隐藏水平滚动条
+    ui.fileTypes_scrollArea->setWidgetResizable(true);
+    ui.fileTypes_scrollArea->setFrameStyle(QFrame::NoFrame);
+
+    // 将内容容器绑定到scrollArea
+    ui.fileTypes_scrollArea->setWidget(scrollContent);
+
+
+    // 批量创建文件类型checkBox
+    QStringList fileTypes = {
+        ".txt", ".doc", ".docx", ".xls", ".xlsx",
+        ".ppt", ".pptx", ".pdf", ".jpg", ".png",
+        ".gif", ".mp3", ".mp4", ".avi", ".zip",
+        ".cpp", ".h", ".py", "md",
+        ".log", ".xml", ".json"
+    };
+
+    int row = 0;   // 行索引
+    int col = 0;   // 列索引（0和1，每两个换一行）
+    const int cols = 2; // 固定2列
+
+    // 循环创建checkbox
+    for (const QString& type : fileTypes)
+    {
+        QCheckBox* checkBox = new QCheckBox(type, scrollContent);
+
+        //调整样式表，确保勾选框显示
+        checkBox->setStyleSheet(R"(
+            QCheckBox {
+                font-size: 13px; 
+                color:black;
+                margin: 0px 0px; /* 调整内外边距，避免文字覆盖勾选框 */
+                spacing: 5px; /* 勾选框和文字的间距 */
+            }
+            QCheckBox::indicator { /* 显式设置勾选框样式，确保可见 */
+                width: 11px;
+                height: 11px;
+                border: 1px solid black;
+                border-radius: 2px;
+            }
+            QCheckBox::indicator:checked { /* 勾选状态的样式 */
+
+                image: url(:/SortApplication/images/iconfont_CheckBox.png);
+            }
+          
+        )");
+
+        checkBox->setEnabled(false);    // 初始禁用
+
+        // GridLayout添加控件：每两个一行
+        contentLayout->addWidget(checkBox, row, col);
+        col++;
+        if (col >= cols) { // 列数到2，换行
+            col = 0;
+            row++;
+        }
+
+        _typeCheckBoxList.append(checkBox);
+    }
+
+    // 最后一行如果只有1个控件，补全行拉伸
+    if (col != 0) {
+        contentLayout->setColumnStretch(col, 1); // 空列拉伸，保持双列对齐
+    }
+    contentLayout->setRowStretch(row + 1, 1); // 最后一行下方拉伸，避免整体分散
+}
+
+//radioButton控制checkBox可选
+void SortApplication::OnFileTypeCheckBoxToggled(bool checked)
+{
+    for (QCheckBox* checkBox : _typeCheckBoxList)
+    {
+        checkBox->setEnabled(checked);
+        // 未选中时清空残留勾选状态
+        if (!checked && checkBox->isChecked())
+        {
+            checkBox->setChecked(false);
+        }
+    }
+}
+
 
 SortApplication::~SortApplication()
 {
