@@ -37,7 +37,7 @@ eg: `manager->SaveOperatorContent(startTime,endTime,fileType,fileName,midSize);`
 
 **Files 结构体内容**  
 
-`QString fileName` - 文件名(无后缀)  
+`QString fileName` - 文件名(完整)  
 `QString suffix` - 文件后缀(单后缀)  
 `QString modifyTime` - 修改时间  
 `QString filePath` - 文件路径  
