@@ -46,4 +46,6 @@ public:
 	int smallFile = chooseNull;
 	//名称方案
 	QString sortName = "";
+	//重命名方案
+	QString renameContent = "";
 };

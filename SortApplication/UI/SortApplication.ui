@@ -332,77 +332,13 @@ color:rgb(0, 0, 0);
             <x>0</x>
             <y>100</y>
             <width>231</width>
-            <height>341</height>
+            <height>291</height>
            </rect>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="sortPage">
-           <widget class="QPushButton" name="startSort_pushButton">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>310</y>
-              <width>100</width>
-              <height>26</height>
-             </rect>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton{
-background-color:rgb(0, 78, 235);
-color:white;
-border-radius:5px;
-text-align: left;
-padding-left: 12px;
-}</string>
-            </property>
-            <property name="text">
-             <string>StartFunc</string>
-            </property>
-            <property name="icon">
-             <iconset resource="SortApplication.qrc">
-              <normaloff>:/SortApplication/images/iconfont_StartOperation.png</normaloff>:/SortApplication/images/iconfont_StartOperation.png</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Return</string>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="withdrawSort_pushButton">
-            <property name="geometry">
-             <rect>
-              <x>120</x>
-              <y>310</y>
-              <width>100</width>
-              <height>26</height>
-             </rect>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton{
-background-color:rgb(255, 85, 0);
-color:white;
-border-radius:5px;
-text-align: left;
-padding-left: 12px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Withdraw</string>
-            </property>
-            <property name="icon">
-             <iconset resource="SortApplication.qrc">
-              <normaloff>:/SortApplication/images/iconfont_WithdrawOperation.png</normaloff>:/SortApplication/images/iconfont_WithdrawOperation.png</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Return</string>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-           </widget>
            <widget class="QGroupBox" name="sort_groupBox">
             <property name="geometry">
              <rect>
@@ -419,7 +355,7 @@ padding-left: 12px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>10</y>
+               <y>0</y>
                <width>170</width>
                <height>20</height>
               </rect>
@@ -438,7 +374,7 @@ font-size:13px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>70</y>
+               <y>60</y>
                <width>170</width>
                <height>20</height>
               </rect>
@@ -457,7 +393,7 @@ font-size:13px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>160</y>
+               <y>150</y>
                <width>170</width>
                <height>20</height>
               </rect>
@@ -476,7 +412,7 @@ font-size:13px;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>230</y>
+               <y>225</y>
                <width>170</width>
                <height>20</height>
               </rect>
@@ -495,7 +431,7 @@ font-size:13px;
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>250</y>
+               <y>255</y>
                <width>170</width>
                <height>21</height>
               </rect>
@@ -520,7 +456,7 @@ color:black;
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>30</y>
+               <y>20</y>
                <width>171</width>
                <height>41</height>
               </rect>
@@ -571,7 +507,7 @@ font-size:11px;
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>90</y>
+               <y>80</y>
                <width>181</width>
                <height>71</height>
               </rect>
@@ -594,7 +530,7 @@ font-size:11px;
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>180</y>
+               <y>170</y>
                <width>181</width>
                <height>51</height>
               </rect>
@@ -675,67 +611,6 @@ color:black;
            </widget>
           </widget>
           <widget class="QWidget" name="renamePage">
-           <widget class="QPushButton" name="startRename_pushButton">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>310</y>
-              <width>100</width>
-              <height>26</height>
-             </rect>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton{
-background-color:rgb(0, 78, 235);
-color:white;
-border-radius:5px;
-text-align: left;
-padding-left: 12px;
-}</string>
-            </property>
-            <property name="text">
-             <string>StartFunc</string>
-            </property>
-            <property name="icon">
-             <iconset resource="SortApplication.qrc">
-              <normaloff>:/SortApplication/images/iconfont_StartOperation.png</normaloff>:/SortApplication/images/iconfont_StartOperation.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="withdrawRename_pushButton">
-            <property name="geometry">
-             <rect>
-              <x>120</x>
-              <y>310</y>
-              <width>100</width>
-              <height>26</height>
-             </rect>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton{
-background-color:rgb(255, 85, 0);
-color:white;
-border-radius:5px;
-text-align: left;
-padding-left: 12px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Withdraw</string>
-            </property>
-            <property name="icon">
-             <iconset resource="SortApplication.qrc">
-              <normaloff>:/SortApplication/images/iconfont_WithdrawOperation.png</normaloff>:/SortApplication/images/iconfont_WithdrawOperation.png</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Return</string>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-           </widget>
            <widget class="QLabel" name="promptMessage_Label">
             <property name="geometry">
              <rect>
@@ -884,10 +759,69 @@ color:black;
             </widget>
            </widget>
            <zorder>rename_groupBox</zorder>
-           <zorder>startRename_pushButton</zorder>
-           <zorder>withdrawRename_pushButton</zorder>
            <zorder>promptMessage_Label</zorder>
           </widget>
+         </widget>
+         <widget class="QPushButton" name="Start_pushButton">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>410</y>
+            <width>100</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+background-color:rgb(0, 78, 235);
+color:white;
+border-radius:5px;
+text-align: left;
+padding-left: 12px;
+}</string>
+          </property>
+          <property name="text">
+           <string>StartFunc</string>
+          </property>
+          <property name="icon">
+           <iconset resource="SortApplication.qrc">
+            <normaloff>:/SortApplication/images/iconfont_StartOperation.png</normaloff>:/SortApplication/images/iconfont_StartOperation.png</iconset>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="Withdraw_pushButton">
+          <property name="geometry">
+           <rect>
+            <x>125</x>
+            <y>410</y>
+            <width>100</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+background-color:rgb(255, 85, 0);
+color:white;
+border-radius:5px;
+text-align: left;
+padding-left: 12px;
+}</string>
+          </property>
+          <property name="text">
+           <string>Withdraw</string>
+          </property>
+          <property name="icon">
+           <iconset resource="SortApplication.qrc">
+            <normaloff>:/SortApplication/images/iconfont_WithdrawOperation.png</normaloff>:/SortApplication/images/iconfont_WithdrawOperation.png</iconset>
+          </property>
+          <property name="shortcut">
+           <string>Return</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
          </widget>
         </widget>
        </item>
