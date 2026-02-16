@@ -241,9 +241,11 @@ bool ManagerMent::SaveOperatorContent(bool byYear, bool byYear_Month, int largeF
 }
 
 //以下为调试代码
+
+//打印所有文件数据
 void ManagerMent::PrintAllFilesInfo()
 {
-	//打印所有文件数据
+
 	vector<Files>::iterator fileIt = this->GetLastFilesPathGroup();
 
 	for (int i = this->GetNowFilesNum(); i > 0; i--)
