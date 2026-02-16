@@ -1,5 +1,6 @@
 #include "SortApplication.h"
 #include "ManagerMent.h"
+#include "SortFunction.h"
 #include <QTimer>
 #include <QSize>
 #include <QListWidgetItem>
@@ -18,6 +19,9 @@ SortApplication::SortApplication(QWidget* parent)
     //启动ManagerMent监听
     ManagerMent* manager = ManagerMent::GetInstance();
 
+    //与SortFunction连接信号
+    SortFunction* sortFunc = new SortFunction(this);
+    connect(manager, &ManagerMent::StartOperator, sortFunc, &SortFunction::SureSortOperator);
 
 
     // 获取当前窗口标志，移除最大化按钮标志，保留其他按钮
@@ -35,6 +39,11 @@ SortApplication::SortApplication(QWidget* parent)
 
        //文件分类类型面板调用
     InitFileTypePanel();
+
+
+    //绑定开始执行信号与槽
+    connect(ui.Start_pushButton, &QPushButton::clicked, this, &SortApplication::OnStartButtonClicked);
+
 
 
     /*===================file_Widget===================*/
@@ -649,6 +658,171 @@ void SortApplication::OnFileTypeCheckBoxToggled(bool checked)
             checkBox->setChecked(false);
         }
     }
+}
+
+//开始执行操作
+void SortApplication::OnStartButtonClicked()
+{
+    //获取管理类单例
+    ManagerMent* _manager = ManagerMent::GetInstance();
+    if (!_manager)
+    {
+        QMessageBox::warning(this, "wrong", "Backend management class initialization failed!");
+        return ;
+    }
+
+    //初始化操作类型和内容
+    _manager->SaveOperatorType();
+    _manager->SaveOperatorContent();
+
+
+    //判断是分类还是重命名
+    /*===分类===*/
+    if (ui.sortRadioButton->isChecked())
+    {
+        int sortType = -1;
+        bool byYear = false;
+        bool byMonth = false;
+        int largeFile = -1;
+        int smallFile = -1;
+        QString sortName = "";
+        std::vector<QString>typeGroup;
+
+        //时间
+        if (ui.time_radioButton->isChecked())
+        {
+            sortType = SortType::byTimePoints;
+
+            byYear = ui.byYear_radioButton->isChecked();
+            byMonth = ui.byMonth_radioButton->isChecked();
+
+            if (byYear == false && byMonth == false)
+            {
+                QMessageBox::warning(this, "Hint", "Please select at least one time type!");
+                return;
+            }
+        }
+
+        //类型
+        else if (ui.type_radioButton->isChecked())
+        {
+            sortType = SortType::byFileTypes;
+            //收集选中CheckBox信息
+            for (QCheckBox* checkBox : _typeCheckBoxList)
+            {
+                if (checkBox->isChecked())
+                {
+                    typeGroup.push_back(checkBox->text());
+                }
+            }
+            if (typeGroup.empty())
+            {
+                QMessageBox::warning(this, "Hint", "Please select at least one file type!");
+                return ;
+            }
+        }
+
+        //大小
+        else if (ui.size_radioButton->isChecked())
+        {
+            sortType = SortType::byFileSize;
+
+            QString smallStr = ui.fileSizeSmall_Input->text().trimmed();
+            QString largeStr = ui.fileSizeLarge_Input->text().trimmed();
+
+            if (smallStr.isEmpty() && largeStr.isEmpty()) {
+                QMessageBox::warning(this, "Wrong", "Both input boxes cannot be empty!");
+                return;
+            }
+
+            //转换输入框内数字为整数(KB)
+            smallFile = smallStr.toInt();
+            largeFile = largeStr.toInt();
+
+            //校验
+            if (smallFile < 0 || largeFile < 0 || (!smallStr.isEmpty() && !largeStr.isEmpty() && smallFile > largeFile))
+            {
+                QMessageBox::warning(this, "Wrong", "Incorrect input for file size!\nPlease ensure that the minimum value ≤ the maximum value and both are non - negative.");
+                return;
+            }
+        }
+
+        //名字
+        else if (ui.name_radioButton->isChecked())
+        {
+            sortType = SortType::bySameFileName;
+            //传入文件名
+            sortName = ui.nameSort_Input->text().trimmed();
+            if (sortName.isEmpty())
+            {
+                QMessageBox::warning(this, "Wrong", "Please Input the File Name!");
+                return;
+            }
+        }
+
+        //未选择
+        else
+        {
+            QMessageBox::warning(this, "Wrong", "Please Select the SortType!");
+            return;
+        }
+
+        //将内容传入后端
+        _manager->SaveOperatorType(ChooseForm::Sort, sortType);
+        _manager->SaveOperatorContent(byYear, byMonth, largeFile, smallFile, sortName, typeGroup, "");
+    }
+
+    /*===重命名===*/
+    else if (ui.renameRadioButton->isChecked())
+    {
+        int renameType = -1;
+        QString renameText = "";
+
+        //前缀
+        if (ui.prefix_radioButton->isChecked())
+        {
+            renameType = RenameType::renamePrefix;
+            renameText = ui.prefix_Input->text().trimmed();
+        }
+
+        //后缀
+        else if (ui.suffix_radioButton->isChecked())
+        {
+            renameType = RenameType::renameSuffix;
+            renameText = ui.suffix_Input->text().trimmed();
+        }
+
+        //统一命名
+        else if (ui.unifyName_radioButton->isChecked())
+        {
+            renameType = RenameType::renameByKeyWord;
+            renameText = ui.unifyName_Input->text().trimmed();
+        }
+
+        //未选择
+        else
+        {
+            QMessageBox::warning(this, "Wrong", "Please Select the RenameType!");
+            return;
+        }
+
+        if (renameText.isEmpty()) {
+            QMessageBox::warning(this, "Hint", "Please Input the Content!");
+            return;
+        }
+
+        //将内容传入后端
+        _manager->SaveOperatorType(ChooseForm::Rename,renameType);
+        _manager->SaveOperatorContent(false, false, -1, -1, "", {},renameText);
+    }
+    
+    //触发后端开始处理信号
+    emit _manager->StartOperator();
+
+    // 调试：打印传递的内容（可选）
+    _manager->PrintAllOperation();
+    QMessageBox::information(this, "Success", "SUCCESS!");
+
 }
 
 

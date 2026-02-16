@@ -35,6 +35,8 @@ private slots:
     void OnClearItemByRightClick();
     //radioButton控制checkBox可选
     void OnFileTypeCheckBoxToggled(bool checked);
+    //开始执行操作
+    void OnStartButtonClicked();
 
 private:
     Ui::SortApplicationClass ui;

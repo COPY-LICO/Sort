@@ -29,7 +29,7 @@ public:
 	//存入当前操作类型 - 无参数传入为初始化操作类型
 	bool SaveOperatorType(int = chooseNull,int = chooseNull);
 	//存入当前操作内容 - 无参数传入为初始化操作内容
-	bool SaveOperatorContent(bool = false,bool = false,int = chooseNull,int = chooseNull,QString = "", std::vector<QString> = {});
+	bool SaveOperatorContent(bool = false,bool = false,int = chooseNull,int = chooseNull,QString = "", std::vector<QString> = {},QString = "");
 	//获取当前操作类型
 	InfoGroup* GetOperatorType();
 	//获取当前操作内容细节
