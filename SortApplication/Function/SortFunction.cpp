@@ -34,10 +34,13 @@ SortFunction::SortFunction(QWidget* parent = nullptr) : QObject(parent)
     this->manager = ManagerMent::GetInstance();
 }
 
+//槽函数 -- -- 
 //根据ManagerMent的信息来决定采用的分类方法
 bool SortFunction::SureSortOperator()
 {
     InfoGroup* infoType = manager->GetOperatorType();
+    this->manager->ClearAllRecordFiles();
+
     if (infoType->chooseForm == 0) //采用分类
     {
         if (infoType->sortType == 0) // 根据时间分类
@@ -69,6 +72,14 @@ bool SortFunction::SureSortOperator()
 
     return false;
 }
+
+//撤回函数内容 - 重命名和分类撤回方式一致
+bool SortFunction::WithDrawOperator()
+{
+    return false; // 未开发完成
+}
+
+//槽函数 -- --
 
 //时间区间分类
 bool SortFunction::SortFileByTimePoint()
@@ -140,6 +151,8 @@ bool SortFunction::SortFileByTimePoint()
             QMessageBox::warning(nullptr, "错误", "文件移动失败：" + file.fileName);
             return false;
         }
+
+        this->manager->SaveRecordFiles("","","","");
     }
 
     QMessageBox::information(nullptr, "成功", "按时间分类完成！");

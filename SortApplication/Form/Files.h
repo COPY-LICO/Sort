@@ -11,3 +11,12 @@ public:
 	QString fileName;
 	int size;
 };
+
+struct RecordFiles
+{
+public:
+	QString oldFileName;
+	QString newFileName;
+	QString oldFilePath;
+	QString newFilePath;
+};

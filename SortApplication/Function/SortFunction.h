@@ -23,6 +23,8 @@ public slots:
 	//分类槽函数 - 监听ManagerMent - StartOperator()信号
 	//判断使用的分类方法
 	bool SureSortOperator();
+	//启动撤回函数
+	bool WithDrawOperator();
 
 private:
 	ManagerMent* manager;

@@ -23,6 +23,7 @@ SortApplication::SortApplication(QWidget* parent)
     //与SortFunction连接信号
     SortFunction* sortFunc = new SortFunction(this);
     connect(manager, &ManagerMent::StartOperator, sortFunc, &SortFunction::SureSortOperator);
+    connect(manager, &ManagerMent::StartWithDrawOperator, sortFunc, &SortFunction::WithDrawOperator);
 
 
     // 获取当前窗口标志，移除最大化按钮标志，保留其他按钮
