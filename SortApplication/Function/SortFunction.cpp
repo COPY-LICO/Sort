@@ -135,7 +135,83 @@ bool SortFunction::SortFileByTimePoint()
 //文件类型分类
 bool SortFunction::SortFileByFileType()
 {
-    return false;
+    DetailInfo* rule = manager->GetOperatorContent();
+    if (!rule)
+    {
+        QMessageBox::warning(nullptr, "错误", "获取类型分类规则失败！");
+        return false;
+    }
+
+    std::vector<QString> typeList = rule->typeGroup;
+    if (typeList.empty())
+    {
+        QMessageBox::warning(nullptr, "提示", "未选择要分类的文件类型！");
+        return false;
+    }
+
+    std::vector<Files> fileList = GetFileList(manager);
+    if (fileList.empty())
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        return false;
+    }
+
+    // 逐个文件：加类型标签重命名
+    for (int i = 0; i < fileList.size(); i++)
+    {
+        Files file = fileList[i];
+        QString suffix = file.suffix;
+        if (suffix.isEmpty())
+        {
+            suffix = "no_suffix";
+        }
+
+        // 判断是否是目标类型
+        bool isTarget = false;
+        for (int j = 0; j < typeList.size(); j++)
+        {
+            QString type = typeList[j];
+            if (type == suffix || type == "." + suffix)
+            {
+                isTarget = true;
+                break;
+            }
+        }
+        if (!isTarget)
+            continue;
+
+        QFileInfo fileInfo(file.filePath);
+        QString fileDir = fileInfo.path();
+
+        QString newFileName = file.prefix + "_type_" + suffix + "." + file.suffix;
+        if (file.suffix.isEmpty())
+        {
+            newFileName = file.prefix + "_type_" + suffix;
+        }
+        QString newFilePath = fileDir + "/" + newFileName;
+
+        // 处理重名
+        int num = 1;
+        while (QFile::exists(newFilePath))
+        {
+            newFileName = file.prefix + "_type_" + suffix + "_" + QString::number(num) + "." + file.suffix;
+            if (file.suffix.isEmpty()) {
+                newFileName = file.prefix + "_type_" + suffix + "_" + QString::number(num);
+            }
+            newFilePath = fileDir + "/" + newFileName;
+            num++;
+        }
+
+        // 执行重命名
+        if (!QFile::rename(file.filePath, newFilePath))
+        {
+            QMessageBox::warning(nullptr, "错误", "文件按类型分类失败：" + file.fileName);
+            return false;
+        }
+    }
+
+    QMessageBox::information(nullptr, "成功", "按文件类型分类完成！");
+    return true;
 }
 
 //文件大小分类
