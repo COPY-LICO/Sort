@@ -20,6 +20,12 @@ public:
 
     //文件类型分类面板
     void InitFileTypePanel();
+
+    //新增历史记录
+    void AddHistoryItem(const QString& operName, const QString& operMode, const QString& operContent, const QString& operTime, int fileCount);
+
+    //操作完成清除文件储存及显示
+    void ClearItem();
     
     ~SortApplication();
 
@@ -37,6 +43,7 @@ private slots:
     void OnFileTypeCheckBoxToggled(bool checked);
     //开始执行操作
     void OnStartButtonClicked();
+  
 
 private:
     Ui::SortApplicationClass ui;
