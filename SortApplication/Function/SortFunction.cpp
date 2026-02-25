@@ -3,7 +3,9 @@
 #include "InfoGroup.h"
 #include <qdir.h>
 #include <qmessagebox.h>
-#include <qdebug.h>
+#include <qdebug.h>  
+#include <QFileInfo>
+#include <QDateTime>
 
 // 从ManagerMent获取文件列表
 std::vector<Files> GetFileList(ManagerMent* manager)
@@ -92,57 +94,41 @@ bool SortFunction::SortFileByTimePoint()
     //  逐个文件分类
     for (int i = 0; i < fileList.size(); i++)
     {
-        Files file = fileList[i]; 
-        QString year = file.modifyTime.left(4);
-        QString month = file.modifyTime.mid(5, 2);
+        Files file = fileList[i];
+        QFileInfo fileInfo(file.filePath);
+        QString fileDir = fileInfo.path();
 
-        // 确定文件夹名称
-        QString folderName;
-        if (rule->byYear && rule->byYear_Month)
-        {
-            folderName = "按时间分类_" + year + "年" + month + "月";
-        }
-        else if (rule->byYear) 
-        {
-            folderName = "按时间分类_" + year + "年";
-        }
-        else if (rule->byYear_Month)
-        {
-            folderName = "按时间分类_" + month + "月";
-        }
-        else 
-        {
-            QMessageBox::warning(nullptr, "错误", "未选择按年/按月！");
-            return false;
-        }
+        // 获取文件修改时间
+        QDateTime modifyTime = fileInfo.lastModified();
+        QString timeTag = modifyTime.toString("yyyyMMdd_HHmmss"); 
 
-        // 创建文件夹
-        QDir folder;
-        QString folderPath = QDir::currentPath() + "/" + folderName;
-        if (!folder.exists(folderPath)) 
+        QString newFileName = file.prefix + "_" + timeTag + "." + file.suffix;
+        if (file.suffix.isEmpty())
         {
-            folder.mkdir(folderPath);
+            newFileName = file.prefix + "_" + timeTag; 
         }
+        QString newFilePath = fileDir + "/" + newFileName;
 
-        // 移动文件（处理重名）
-        QString oldPath = file.filePath;
-        QString newPath = folderPath + "/" + file.fileName;
+        // 处理重名
         int num = 1;
-        while (QFile::exists(newPath))
+        while (QFile::exists(newFilePath))
         {
-            newPath = folderPath + "/" + file.prefix + "_" + QString::number(num) + "." + file.suffix;
+            newFileName = file.prefix + "_" + timeTag + "_" + QString::number(num) + "." + file.suffix;
+            if (file.suffix.isEmpty()) {
+                newFileName = file.prefix + "_" + timeTag + "_" + QString::number(num);
+            }
+            newFilePath = fileDir + "/" + newFileName;
             num++;
         }
 
-        // 执行移动
-        if (!QFile::rename(oldPath, newPath)) 
-        {
-            QMessageBox::warning(nullptr, "错误", "文件移动失败：" + file.fileName);
+        // 执行重命名
+        if (!QFile::rename(file.filePath, newFilePath)) {
+            QMessageBox::warning(nullptr, "错误", "文件按时间分类失败：" + file.fileName);
             return false;
         }
     }
 
-    QMessageBox::information(nullptr, "成功", "按时间分类完成！");
+    QMessageBox::information(nullptr, "成功", "按时间区间分类完成！");
     return true;
 }
 
