@@ -487,6 +487,8 @@ void SortApplication::OnCustomContextMenuRequested(const QPoint& pos)
     //在右键位置显示菜单
     menu.exec(ui.selectedFiles_listWidget->mapToGlobal(pos));
 
+
+
 }
 
 // 右键删除item
