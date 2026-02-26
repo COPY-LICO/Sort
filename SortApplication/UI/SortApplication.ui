@@ -336,7 +336,7 @@ color:rgb(0, 0, 0);
            </rect>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="sortPage">
            <widget class="QGroupBox" name="sort_groupBox">
@@ -406,50 +406,6 @@ font-size:13px;
              </property>
              <property name="text">
               <string>By the File Size</string>
-             </property>
-            </widget>
-            <widget class="QRadioButton" name="name_radioButton">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>225</y>
-               <width>170</width>
-               <height>20</height>
-              </rect>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QRadioButton{
-color:black;
-font-size:13px;
-}</string>
-             </property>
-             <property name="text">
-              <string>By the same name</string>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="nameSort_Input">
-             <property name="geometry">
-              <rect>
-               <x>20</x>
-               <y>255</y>
-               <width>170</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QLineEdit{
-border-radius:5px;
-border:1px solid;
-border-color:gray;
-color:black;
-}
-</string>
-             </property>
-             <property name="readOnly">
-              <bool>false</bool>
-             </property>
-             <property name="placeholderText">
-              <string>eg:mine_1,mine_2 -- mine</string>
              </property>
             </widget>
             <widget class="QGroupBox" name="time_groupBox">

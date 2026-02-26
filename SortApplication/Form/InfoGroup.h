@@ -13,7 +13,6 @@ enum SortType
 	byTimePoints,
 	byFileTypes,
 	byFileSize,
-	bySameFileName
 
 };
 
@@ -44,8 +43,7 @@ public:
 	//大小方案
 	int largeFile = chooseNull;
 	int smallFile = chooseNull;
-	//名称方案
-	QString sortName = "";
+
 	//重命名方案
 	QString renameContent = "";
 };

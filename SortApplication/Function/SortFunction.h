@@ -16,8 +16,7 @@ public:
 	bool SortFileByFileType();
 	//文件大小分类函数
 	bool SortFileByFileSize();
-	//文件名筛选分类函数
-	bool SortFileByFileName();
+
 
 public slots:
 	//分类槽函数 - 监听ManagerMent - StartOperator()信号

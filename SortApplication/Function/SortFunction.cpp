@@ -34,11 +34,6 @@ bool SortFunction::SureSortOperator()
             //获取信息 - 调用大小分类函数
             return this->SortFileByFileSize();
         }
-        else if (infoType->sortType == SortType::bySameFileName) // 根据文件名分类
-        {
-            //获取信息 - 调用文件名分类函数
-            return this->SortFileByFileName();
-        }
     }
     else if (infoType->chooseForm == ChooseForm::Rename) //采用重命名
     {
@@ -243,8 +238,7 @@ bool SortFunction::SortFileByFileSize()
     return false;
 }
 
-//文件名相同筛选分类
-bool SortFunction::SortFileByFileName()
+bool SortFunction::WithDrawOperator()
 {
     return false;
 }

@@ -215,16 +215,15 @@ void ManagerMent::ClearAllFiles()
 //存入分类操作类型文本框的内容 - 默认全部为空 - 在点击开始按钮发送分类命令前调用
 //不输入任何数据表明初始化后端数据
 //返回false表明初始化，返回true表明赋值成功
-bool ManagerMent::SaveOperatorContent(bool byYear, bool byYear_Month, int largeFile, int smallFile, QString sortName, std::vector<QString> tempType, QString renameContent)
+bool ManagerMent::SaveOperatorContent(bool byYear, bool byYear_Month, int largeFile, int smallFile,  std::vector<QString> tempType, QString renameContent)
 {
-	if (byYear != false || byYear_Month != false || largeFile > 0 || smallFile > 0 || !sortName.isEmpty() == true || !tempType.empty() == true || !renameContent.isEmpty() == true)
+	if (byYear != false || byYear_Month != false || largeFile > 0 || smallFile > 0 ||  !tempType.empty() == true || !renameContent.isEmpty() == true)
 	{
 		this->detailGroup.byYear = byYear;
 		this->detailGroup.byYear_Month = byYear_Month;
 		this->detailGroup.largeFile = largeFile;
 		this->detailGroup.smallFile = smallFile;
 		this->detailGroup.typeGroup = tempType;
-		this->detailGroup.sortName = sortName;
 		this->detailGroup.renameContent = renameContent;
 		return true; // 赋值成功
 	}
@@ -235,7 +234,6 @@ bool ManagerMent::SaveOperatorContent(bool byYear, bool byYear_Month, int largeF
 		this->detailGroup.largeFile = largeFile;
 		this->detailGroup.smallFile = smallFile;
 		this->detailGroup.typeGroup = tempType;
-		this->detailGroup.sortName = sortName;
 		this->detailGroup.renameContent = renameContent;
 		return false; // 初始化成功
 	}
@@ -325,7 +323,6 @@ void ManagerMent::PrintAllOperation()
 		qDebug() << temp << "   ";
 
 	qDebug() << "划分大小参数：" << "large：" << this->detailGroup.largeFile << "    " << "small: " << this->detailGroup.smallFile;
-	qDebug() << "已经读取的文件名：" << this->detailGroup.sortName;
 	
 	// qDebug() << "重命名操作细节" << '\n' << 
 }

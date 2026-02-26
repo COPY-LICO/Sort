@@ -95,11 +95,6 @@ SortApplication::SortApplication(QWidget* parent)
             ui.size_radioButton->setChecked(false);
             ui.time_radioButton->setChecked(false);
             ui.type_radioButton->setChecked(false);
-            ui.name_radioButton->setChecked(false);
-
-            //禁用并清空name输入框
-            ui.nameSort_Input->setEnabled(false);
-            ui.nameSort_Input->clear();
 
             //禁用并清空size输入框
             ui.fileSizeSmall_Input->setEnabled(false);
@@ -133,29 +128,7 @@ SortApplication::SortApplication(QWidget* parent)
     ui.size_radioButton->setChecked(false);
     ui.time_radioButton->setChecked(false);
     ui.type_radioButton->setChecked(false);
-    ui.name_radioButton->setChecked(false);
-
-    //连接name_radioButton和name_Input，只有选中前者，后者才可输入：
-    // 1. 设置输入框默认状态：单选按钮未选中，输入框禁用
-    ui.nameSort_Input->setEnabled(false);
-
-   //选中其他RadioButton时清空nameSort_Input
-        auto clearNameInput = [=]() {
-        ui.nameSort_Input->clear();
-        ui.nameSort_Input->setEnabled(false);
-        };
-
-
-    // 2. 绑定信号槽   
-    // name RadioButton选中时启用输入框（内容不清空，仅切换其他时清空）
-    connect(ui.name_radioButton, &QRadioButton::toggled, this, [=](bool checked) {
-        ui.nameSort_Input->setEnabled(checked);
-        qDebug() << ui.byYear_radioButton->isChecked();
-        if (!checked) clearNameInput();
-    });
-
-
-
+   
 
     /*===================rename_groupBox===================*/
     //设置全部按钮默认状态
@@ -706,7 +679,6 @@ void SortApplication::OnStartButtonClicked()
         bool byMonth = false;
         int largeFile = -1;
         int smallFile = -1;
-        QString sortName = "";
         std::vector<QString>typeGroup;
 
         //时间
@@ -820,27 +792,6 @@ void SortApplication::OnStartButtonClicked()
             }
         }
 
-        //名字
-        else if (ui.name_radioButton->isChecked())
-        {
-            sortType = SortType::bySameFileName;
-            //传入文件名
-            sortName = ui.nameSort_Input->text().trimmed();
-
-            //校验
-            if (sortName.isEmpty())
-            {
-                QMessageBox::warning(this, "Wrong", "Please Input the File Name!");
-                return;
-            }
-
-            //历史信息
-            operName = "bySameFileName";
-            operContent = sortName;
-
-
-        }
-
         //未选择
         else
         {
@@ -850,7 +801,7 @@ void SortApplication::OnStartButtonClicked()
 
         //将内容传入后端
         _manager->SaveOperatorType(ChooseForm::Sort, sortType);
-        _manager->SaveOperatorContent(byYear, byMonth, largeFile, smallFile, sortName, typeGroup, "");
+        _manager->SaveOperatorContent(byYear, byMonth, largeFile, smallFile, typeGroup, "");
     }
 
     /*===重命名===*/
@@ -907,7 +858,7 @@ void SortApplication::OnStartButtonClicked()
 
         //将内容传入后端
         _manager->SaveOperatorType(ChooseForm::Rename,renameType);
-        _manager->SaveOperatorContent(false, false, -1, -1, "", {},renameText);
+        _manager->SaveOperatorContent(false, false, -1, -1, {},renameText);
     }
     
     //触发后端开始处理信号
