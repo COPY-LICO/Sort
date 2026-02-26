@@ -242,10 +242,53 @@ bool ManagerMent::SaveOperatorContent(bool byYear, bool byYear_Month, int largeF
 	return false;
 }
 
+//存入历史操作记录
+bool ManagerMent::SaveRecordFiles(QString oldFileName, QString newFileName, QString oldFilePath, QString newFilePath)
+{
+	RecordFiles tempRecord;
+	tempRecord.oldFileName = oldFileName;
+	tempRecord.newFileName = newFileName;
+	tempRecord.oldFileName = oldFilePath;
+	tempRecord.newFilePath = newFilePath;
+
+	//存入数据 
+	//传入数据不完整，返回false
+	if (oldFileName == "" || newFileName == "" || oldFilePath == "" || newFilePath == "")
+	{
+		return false;
+	}
+	this->_recordFileGroup.push_back(tempRecord);
+	return true;
+}
+
+//返回存入历史操作记录的指向最后一个元素的迭代器
+std::vector<RecordFiles>::iterator ManagerMent::GetRecordFilesGroup()
+{
+	if (!this->_recordFileGroup.empty())
+	{
+		//指向最后一个元素
+		return --this->_recordFileGroup.end();
+	}
+	else
+	{
+		//指向空
+		return this->_recordFileGroup.end();
+	}
+
+	return this->_recordFileGroup.end();;
+}
+
+void ManagerMent::ClearAllRecordFiles()
+{
+	this->_recordFileGroup.clear();
+}
+
 //以下为调试代码
+
+//打印所有文件数据
 void ManagerMent::PrintAllFilesInfo()
 {
-	//打印所有文件数据
+
 	vector<Files>::iterator fileIt = this->GetLastFilesPathGroup();
 
 	for (int i = this->GetNowFilesNum(); i > 0; i--)
@@ -285,4 +328,20 @@ void ManagerMent::PrintAllOperation()
 	qDebug() << "已经读取的文件名：" << this->detailGroup.sortName;
 	
 	// qDebug() << "重命名操作细节" << '\n' << 
+}
+
+//打印所有存入的历史文件记录
+void ManagerMent::PrintAllRecordFilesInfo()
+{
+	vector<RecordFiles>::iterator fileIt = this->GetRecordFilesGroup();
+
+	for (int i = this->GetNowFilesNum(); i > 0; i--)
+	{
+		qDebug() << "oldFileName: " << (*fileIt).oldFileName << "   newFileName: " << (*fileIt).newFileName;
+		qDebug() << "oldFilePath: " << (*fileIt).oldFilePath << "   newFilePath: " << (*fileIt).newFilePath;
+		if (fileIt != this->_recordFileGroup.begin())
+		{
+			fileIt--;
+		}
+	}
 }

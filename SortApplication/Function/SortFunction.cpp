@@ -13,6 +13,7 @@ SortFunction::SortFunction(QWidget* parent) : QObject(parent)
     this->manager = ManagerMent::GetInstance();
 }
 
+//槽函数 -- -- 
 //根据ManagerMent的信息来决定采用的分类方法
 bool SortFunction::SureSortOperator()
 {

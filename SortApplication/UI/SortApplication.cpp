@@ -10,6 +10,7 @@
 #include <QScrollArea>
 #include <QCheckBox>
 #include <QButtonGroup>
+#include <QString>
 
 SortApplication::SortApplication(QWidget* parent)
     : QMainWindow(parent)
@@ -22,6 +23,7 @@ SortApplication::SortApplication(QWidget* parent)
     //与SortFunction连接信号
     SortFunction* sortFunc = new SortFunction(this);
     connect(manager, &ManagerMent::StartOperator, sortFunc, &SortFunction::SureSortOperator);
+    connect(manager, &ManagerMent::StartWithDrawOperator, sortFunc, &SortFunction::WithDrawOperator);
 
 
     // 获取当前窗口标志，移除最大化按钮标志，保留其他按钮
@@ -245,9 +247,10 @@ SortApplication::SortApplication(QWidget* parent)
 
     /*===================ListWidget===================*/
     
+    //文件列表
     //隐藏滚动条
     ui.selectedFiles_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui.historyRecord_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui.selectedFiles_listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     //添加右键删除选中功能
     //设置菜单右键列表自定义
@@ -255,6 +258,13 @@ SortApplication::SortApplication(QWidget* parent)
     //绑定右键点击信号到槽函数
     connect(ui.selectedFiles_listWidget, &QListWidget::customContextMenuRequested,
         this, &SortApplication::OnCustomContextMenuRequested);
+
+
+
+    //历史记录列表
+    //隐藏滚动条
+    ui.historyRecord_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui.historyRecord_listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 
     /*===================size_groupBox===================*/
@@ -351,7 +361,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
 
         //创建列表项
         QListWidgetItem* item = new QListWidgetItem(ui.selectedFiles_listWidget);
-        item->setSizeHint(QSize(0, 58));    //设置项宽自适应，高45
+        item->setSizeHint(QSize(0, 58));    //设置项宽自适应，高58
 
 
         //创建自定义Widget来显示内容
@@ -592,7 +602,7 @@ void SortApplication::InitFileTypePanel()
         ".txt", ".doc", ".docx", ".xls", ".xlsx",
         ".ppt", ".pptx", ".pdf", ".jpg", ".png",
         ".gif", ".mp3", ".mp4", ".avi", ".zip",
-        ".cpp", ".h", ".py", "md",
+        ".cpp", ".h", ".py", ".md",
         ".log", ".xml", ".json"
     };
 
@@ -676,10 +686,19 @@ void SortApplication::OnStartButtonClicked()
     _manager->SaveOperatorContent();
 
 
+    //历史信息
+    QString operName = ""; //操作名称
+    QString operMode = ""; //操作模式
+    QString operContent = ""; //操作内容
+
+
     //判断是分类还是重命名
     /*===分类===*/
     if (ui.sortRadioButton->isChecked())
     {
+
+        operName = "Sort";
+
         int sortType = -1;
         bool byYear = false;
         bool byMonth = false;
@@ -696,11 +715,29 @@ void SortApplication::OnStartButtonClicked()
             byYear = ui.byYear_radioButton->isChecked();
             byMonth = ui.byMonth_radioButton->isChecked();
 
+            if (byYear && byMonth)
+            {
+                QMessageBox::warning(this, "Wrong", "The system gets wrong!");
+                return;
+            }
+
             if (byYear == false && byMonth == false)
             {
                 QMessageBox::warning(this, "Hint", "Please select at least one time type!");
                 return;
             }
+        }
+
+        //历史信息
+        operMode = "byTimePoints";
+
+        if (byYear)
+        {
+            operContent = "byYear";
+        }
+        else if (byMonth)
+        {
+            operContent = "byMonth";
         }
 
         //类型
@@ -720,6 +757,23 @@ void SortApplication::OnStartButtonClicked()
                 QMessageBox::warning(this, "Hint", "Please select at least one file type!");
                 return ;
             }
+
+
+            //历史信息
+            operMode = "byFileTypes";
+
+            if (!typeGroup.empty())
+            {
+                QStringList typeList;
+                for (const auto& t : typeGroup)
+                    typeList << t;
+                operContent = typeList.join(", ");
+            }
+            else
+            {
+                operContent = "";
+            }
+
         }
 
         //大小
@@ -745,6 +799,23 @@ void SortApplication::OnStartButtonClicked()
                 QMessageBox::warning(this, "Wrong", "Incorrect input for file size!\nPlease ensure that the minimum value ≤ the maximum value and both are non - negative.");
                 return;
             }
+
+
+            //历史信息
+            operMode = "byFileSize";
+
+            if (smallStr.isEmpty())
+            {
+                operContent = QString("%1 KB").arg(largeFile);
+            }
+            else if (largeStr.isEmpty())
+            {
+                operContent = QString("%1 KB").arg(smallFile);
+            }
+            else
+            {
+                operContent = QString("%1 KB | %2 KB").arg(smallFile).arg(largeFile);
+            }
         }
 
         //名字
@@ -753,11 +824,19 @@ void SortApplication::OnStartButtonClicked()
             sortType = SortType::bySameFileName;
             //传入文件名
             sortName = ui.nameSort_Input->text().trimmed();
+
+            //校验
             if (sortName.isEmpty())
             {
                 QMessageBox::warning(this, "Wrong", "Please Input the File Name!");
                 return;
             }
+
+            //历史信息
+            operName = "bySameFileName";
+            operContent = sortName;
+
+
         }
 
         //未选择
@@ -775,6 +854,7 @@ void SortApplication::OnStartButtonClicked()
     /*===重命名===*/
     else if (ui.renameRadioButton->isChecked())
     {
+        operName = "Rename";
         int renameType = -1;
         QString renameText = "";
 
@@ -783,6 +863,10 @@ void SortApplication::OnStartButtonClicked()
         {
             renameType = RenameType::renamePrefix;
             renameText = ui.prefix_Input->text().trimmed();
+
+            //历史信息
+            operMode = "renamePrefix";
+            operContent = renameText;
         }
 
         //后缀
@@ -790,6 +874,10 @@ void SortApplication::OnStartButtonClicked()
         {
             renameType = RenameType::renameSuffix;
             renameText = ui.suffix_Input->text().trimmed();
+
+            //历史信息
+            operMode = "renameSuffix";
+            operContent = renameText;
         }
 
         //统一命名
@@ -797,6 +885,10 @@ void SortApplication::OnStartButtonClicked()
         {
             renameType = RenameType::renameByKeyWord;
             renameText = ui.unifyName_Input->text().trimmed();
+
+            //历史信息
+            operMode = "renameByKeyWord";
+            operContent = renameText;
         }
 
         //未选择
@@ -819,11 +911,136 @@ void SortApplication::OnStartButtonClicked()
     //触发后端开始处理信号
     emit _manager->StartOperator();
 
-    // 调试：打印传递的内容（可选）
+    // 调试：打印传递的内容
     _manager->PrintAllOperation();
     QMessageBox::information(this, "Success", "SUCCESS!");
 
+
+    //进行信息收集并储存历史记录
+    QString operTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    int fileCount = _manager->GetNowFilesNum();
+    if (!operName.isEmpty() && !operMode.isEmpty() && !operContent.isEmpty())
+    {
+        AddHistoryItem(operName, operMode, operContent, operTime, fileCount);
+    }
+    else
+    {
+        QMessageBox::warning(this, "Wrong", "There is a problem with record collection!");
+        return;
+    }
+
+    //清空文件选择区域内的所有文件以及储存文件
+    ClearItem();
+
 }
+
+//新增历史记录
+void SortApplication::AddHistoryItem(const QString& operName, const QString& operMode, const QString& operContent, const QString& operTime, int fileCount)
+{
+    //创建列表项
+    QListWidgetItem* Item = new QListWidgetItem();
+    Item->setSizeHint(QSize(0, 90));
+
+    //创建自定义WIdget显示内容
+    QWidget* historyWidget = new QWidget();
+    QHBoxLayout* hLayout = new QHBoxLayout(historyWidget);
+    hLayout->setContentsMargins(10, 8, 10, 8);
+    hLayout->setSpacing(15);
+    historyWidget->setStyleSheet("background-color: transparent; border: none;");
+
+    //历史记录信息布局
+    QWidget* infoWidget = new QWidget();
+    QVBoxLayout* vLayout = new QVBoxLayout(infoWidget);
+    vLayout->setContentsMargins(0, 0, 0, 0);
+    vLayout->setSpacing(3);
+    infoWidget->setStyleSheet("background-color: transparent; border: none;");
+
+
+    // 1. 操作名称 + 文件数量（标题行，加粗）
+    QString nameCountText = QString("%1 | Number of files：%2").arg(operName).arg(fileCount);
+    QLabel* nameCountLabel = new QLabel(nameCountText);
+    nameCountLabel->setStyleSheet("font-weight: bold; color: #333333; font-size: 14px;");
+    vLayout->addWidget(nameCountLabel);
+
+    // 2. 操作方式
+    QString modeText = QString("OperMode：%1").arg(operMode);
+    QLabel* modeLabel = new QLabel(modeText);
+    modeLabel->setStyleSheet("font-size: 12px; color: #666666;");
+    vLayout->addWidget(modeLabel);
+
+    // 3. 具体内容（自动换行，防止内容过长）
+    QString contentText = QString("OperContent：%1").arg(operContent);
+    QLabel* contentLabel = new QLabel(contentText);
+    contentLabel->setStyleSheet("font-size: 12px; color: #666666;");
+    contentLabel->setWordWrap(true); // 自动换行
+    vLayout->addWidget(contentLabel);
+
+    // 4. 操作时间（居右/居左均可，这里居左）
+    QString timeText = QString("OperTime：%1").arg(operTime);
+    QLabel* timeLabel = new QLabel(timeText);
+    timeLabel->setStyleSheet("font-size: 12px; color: #999999;");
+    vLayout->addWidget(timeLabel);
+
+    // 将信息Widget加入水平布局，添加拉伸使内容靠左
+    hLayout->addWidget(infoWidget);
+    hLayout->addStretch();
+
+    // 绑定自定义Widget到列表项
+    ui.historyRecord_listWidget->insertItem(0, Item);
+    ui.historyRecord_listWidget->setItemWidget(Item, historyWidget);
+
+    ui.historyRecord_listWidget->setStyleSheet(R"(
+    QListWidget {
+        border: none;
+        background-color: transparent;
+    }
+    QListWidget::item {
+        background-color: #FFFFFF;
+        border: 1px solid rgb(0, 170, 255); 
+        border-radius: 6px; 
+    }
+    QListWidget::item:hover {
+        background-color: rgb(245,245,245);
+    }
+    QListWidget::item:selected,
+    QListWidget::item:selected:focus {
+        background-color: rgb(245,245,245); 
+        border: 1px solid rgb(0, 170, 255); 
+        outline: none;
+    }
+)");
+    ui.historyRecord_listWidget->setSpacing(1); // item间距
+    ui.historyRecord_listWidget->setFocusPolicy(Qt::NoFocus); // 无焦点虚线框
+
+
+    // 滚动到最新的历史记录
+    ui.historyRecord_listWidget->scrollToTop();
+}
+
+//操作完成清除文件储存及显示
+void SortApplication::ClearItem()
+{
+    //清空_fileGroup
+    ManagerMent* _manager = ManagerMent::GetInstance();
+    _manager->ClearAllFiles();
+
+    //清空UI中的所有item
+    while (ui.selectedFiles_listWidget->count() > 0)
+    {
+        QListWidgetItem* item = ui.selectedFiles_listWidget->takeItem(0);
+        QWidget* itemWidget = ui.selectedFiles_listWidget->itemWidget(item);
+        if (itemWidget)
+        {
+            delete itemWidget;
+        }
+        delete item;
+    }
+
+    //更新文件数量
+    ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
+}
+
+
 
 
 SortApplication::~SortApplication()
