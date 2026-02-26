@@ -16,6 +16,9 @@ SortFunction::SortFunction(QWidget* parent) : QObject(parent)
 //根据ManagerMent的信息来决定采用的分类方法
 bool SortFunction::SureSortOperator()
 {
+    // 清空上一次的操作记录
+    manager->ClearAllRecordFiles();
+
     InfoGroup* infoType = manager->GetOperatorType();
     if (infoType->chooseForm == ChooseForm::Sort) //采用分类
     {
@@ -56,10 +59,56 @@ bool SortFunction::SureSortOperator()
 
     return false;
 }
+
 //撤回函数
 bool SortFunction::WithDrawOperator()
 {
-    return false;
+    // 获取历史记录迭代器
+    std::vector<RecordFiles>::iterator recordIt = manager->GetRecordFilesGroup();
+    if (!&(*recordIt)) 
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无可撤回的操作！");
+        return false;
+    }
+
+    // 遍历所有记录，逐个恢复文件
+    int recordNum = manager->GetNowFilesNum(); 
+    for (int i = 0; i < recordNum; i++)
+    {
+        RecordFiles& record = *recordIt;
+
+        if (QFile::exists(record.newFilePath))
+        {
+            bool ret = QFile::rename(record.newFilePath, record.oldFilePath);
+            if (!ret)
+            {
+                QMessageBox::warning(nullptr, "错误", "撤回失败：" + record.newFileName);
+                return false;
+            }
+        }
+
+        // 更新manager中的文件数据
+        std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+        for (int j = 0; j < recordNum - i - 1; j++)
+        {
+            if (fileIt != manager->GetLastFilesPathGroup())
+                fileIt--;
+        }
+        Files& file = *fileIt;
+        file.filePath = record.oldFilePath;
+        file.fileName = record.oldFileName;
+
+        // 迭代器前移
+        if (i != recordNum - 1)
+        {
+            recordIt--;
+        }
+    }
+
+    // 清空撤回记录
+    manager->ClearAllRecordFiles();
+    QMessageBox::information(nullptr, "成功", "撤回操作完成！");
+    return true;
 }
 
 //槽函数 -- --
@@ -77,9 +126,14 @@ bool SortFunction::SortFileByTimePoint()
 
     //  获取文件总数
     int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        return false;
+    }
 
     std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
-    if (!fileIt._Ptr)
+    if (!&(*fileIt))
     {
         QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
         return false;
@@ -112,30 +166,40 @@ bool SortFunction::SortFileByTimePoint()
             return false;
         }
 
+        // 原文件目录创建时间文件夹
         QFileInfo fileInfo(file.filePath);
         QString fileDir = fileInfo.path();
-        QString oldFileName = file.fileName;
-        QString newFileName = timeTag + oldFileName;
-        QString newFilePath = fileDir + "/" + newFileName;
-
-        // 处理重名
-        int num = 1;
-        while (QFile::exists(newFilePath))
+        QDir folder;
+        QString folderName = "sort_by_time_" + timeTag;
+        QString folderPath = fileDir + "/" + folderName;
+        if (!folder.exists(folderPath))
         {
-            newFileName = timeTag + file.prefix + "_" + QString::number(num) + "." + file.suffix;
-            newFilePath = fileDir + "/" + newFileName;
+            folder.mkdir(folderPath);
+        }
+
+
+        // 移动文件
+        QString oldPath = file.filePath;
+        QString newPath = folderPath + "/" + file.fileName;
+        int num = 1;
+        while (QFile::exists(newPath))
+        {
+            newPath = folderPath + "/" + file.prefix + "_" + QString::number(num) + "." + file.suffix;
             num++;
         }
 
-        // 执行重命名
-        if (!QFile::rename(file.filePath, newFilePath))
+        // 执行移动
+        if (!QFile::rename(oldPath, newPath))
         {
-            QMessageBox::warning(nullptr, "错误", "文件重命名失败：" + file.fileName);
+            QMessageBox::warning(nullptr, "错误", "文件移动失败：" + file.fileName);
             return false;
         }
 
-        file.filePath = newFilePath;
-        file.fileName = newFileName;
+        // 保存撤回记录
+        manager->SaveRecordFiles(file.fileName, file.fileName, oldPath, newPath);
+
+        // 更新原数据
+        file.filePath = newPath;
 
         if (i != fileNum - 1)
         {
@@ -174,7 +238,7 @@ bool SortFunction::SortFileByFileType()
     }
 
     std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
-    if (!fileIt._Ptr)
+    if (!&(*fileIt))
     {
         QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
         return false;
@@ -238,6 +302,10 @@ bool SortFunction::SortFileByFileType()
             return false;
         }
 
+        // 保存撤回记录
+        manager->SaveRecordFiles(file.fileName, file.fileName, oldPath, newPath);
+
+        // 更新原数据
         if (i != fileNum - 1)
         {
             fileIt--;
