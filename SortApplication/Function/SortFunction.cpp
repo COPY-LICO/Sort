@@ -5,7 +5,6 @@
 #include <qmessagebox.h>
 #include <qdebug.h>  
 #include <QFileInfo>
-#include <QDateTime>
 
 SortFunction::SortFunction(QWidget* parent) : QObject(parent)
 {
@@ -69,38 +68,58 @@ bool SortFunction::SortFileByTimePoint()
     }
 
     std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
-    if (!fileIt._Ptr) 
+    if (!fileIt._Ptr)
     {
-        Files file = fileList[i];
+        QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
+        return false;
+    }
+
+    //  逐个文件重命名分类
+    for (int i = 0; i < fileNum; i++)
+    {
+        Files& file = *fileIt;
+        QString year = file.modifyTime.left(4);
+        QString month = file.modifyTime.mid(5, 2);
+
+        // 确定重命名
+        QString timeTag;
+        if (rule->byYear && rule->byYear_Month)
+        {
+            timeTag = "time_" + year + "_" + month + "_";
+        }
+        else if (rule->byYear)
+        {
+            timeTag = "time_" + year + "_";
+        }
+        else if (rule->byYear_Month)
+        {
+            timeTag = "time_" + month + "_";
+        }
+        else
+        {
+            QMessageBox::warning(nullptr, "错误", "未选择按年/按月！");
+            return false;
+        }
+
         QFileInfo fileInfo(file.filePath);
         QString fileDir = fileInfo.path();
-
-        // 获取文件修改时间
-        QDateTime modifyTime = fileInfo.lastModified();
-        QString timeTag = modifyTime.toString("yyyyMMdd_HHmmss"); 
-
-        QString newFileName = file.prefix + "_" + timeTag + "." + file.suffix;
-        if (file.suffix.isEmpty())
-        {
-            newFileName = file.prefix + "_" + timeTag; 
-        }
+        QString oldFileName = file.fileName;
+        QString newFileName = timeTag + oldFileName;
         QString newFilePath = fileDir + "/" + newFileName;
 
         // 处理重名
         int num = 1;
         while (QFile::exists(newFilePath))
         {
-            newFileName = file.prefix + "_" + timeTag + "_" + QString::number(num) + "." + file.suffix;
-            if (file.suffix.isEmpty()) {
-                newFileName = file.prefix + "_" + timeTag + "_" + QString::number(num);
-            }
+            newFileName = timeTag + file.prefix + "_" + QString::number(num) + "." + file.suffix;
             newFilePath = fileDir + "/" + newFileName;
             num++;
         }
 
         // 执行重命名
-        if (!QFile::rename(file.filePath, newFilePath)) {
-            QMessageBox::warning(nullptr, "错误", "文件按时间分类失败：" + file.fileName);
+        if (!QFile::rename(file.filePath, newFilePath))
+        {
+            QMessageBox::warning(nullptr, "错误", "文件重命名失败：" + file.fileName);
             return false;
         }
 
