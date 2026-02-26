@@ -7,30 +7,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 
-// 从ManagerMent获取文件列表
-std::vector<Files> GetFileList(ManagerMent* manager)
-{
-    std::vector<Files> fileList;
-    int fileNum = manager->GetNowFilesNum();
-    if (fileNum <= 0)
-    {
-        return fileList;
-    }
-
-    auto fileIt = manager->GetLastFilesPathGroup();
-    // 所有文件存入列表
-    for (int i = 0; i < fileNum; i++)
-    {
-        fileList.push_back(*fileIt);
-        if (i != fileNum - 1)
-        {
-            fileIt--; 
-        }
-    }
-    return fileList;
-}
-
-SortFunction::SortFunction(QWidget* parent = nullptr) : QObject(parent)
+SortFunction::SortFunction(QWidget* parent) : QObject(parent)
 {
     //获取操作管理对象
     this->manager = ManagerMent::GetInstance();
@@ -40,30 +17,30 @@ SortFunction::SortFunction(QWidget* parent = nullptr) : QObject(parent)
 bool SortFunction::SureSortOperator()
 {
     InfoGroup* infoType = manager->GetOperatorType();
-    if (infoType->chooseForm == 0) //采用分类
+    if (infoType->chooseForm == ChooseForm::Sort) //采用分类
     {
-        if (infoType->sortType == 0) // 根据时间分类
+        if (infoType->sortType == SortType::byTimePoints) // 根据时间分类
         {
             //获取信息 - 调用时间分类函数
             return this->SortFileByTimePoint();
         }
-        else if (infoType->sortType == 1) // 根据文件类型分类
+        else if (infoType->sortType == SortType::byFileTypes) // 根据文件类型分类
         {
             //获取信息 - 调用类型分类函数
             return this->SortFileByFileType();
         }
-        else if (infoType->sortType == 2) // 根据文件大小分类
+        else if (infoType->sortType == SortType::byFileSize) // 根据文件大小分类
         {
             //获取信息 - 调用大小分类函数
             return this->SortFileByFileSize();
         }
-        else if (infoType->sortType == 3) // 根据文件名分类
+        else if (infoType->sortType == SortType::bySameFileName) // 根据文件名分类
         {
             //获取信息 - 调用文件名分类函数
             return this->SortFileByFileName();
         }
     }
-    else if (infoType->chooseForm == 1) //采用重命名
+    else if (infoType->chooseForm == ChooseForm::Rename) //采用重命名
     {
         //未开发
         return false;
@@ -71,28 +48,27 @@ bool SortFunction::SureSortOperator()
 
     return false;
 }
-
 //时间区间分类
 bool SortFunction::SortFileByTimePoint()
 {
-    //  获取分类规则（按年/按月）
+    //  获取分类规则
     DetailInfo* rule = manager->GetOperatorContent();
-    if (!rule) 
+    if (!rule)
     {
         QMessageBox::warning(nullptr, "错误", "获取时间分类规则失败！");
         return false;
     }
 
-    //  获取所有文件列表
-    std::vector<Files> fileList = GetFileList(manager);
-    if (fileList.empty()) 
+    //  获取文件总数
+    int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
     {
         QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
         return false;
     }
 
-    //  逐个文件分类
-    for (int i = 0; i < fileList.size(); i++)
+    std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+    if (!fileIt._Ptr) 
     {
         Files file = fileList[i];
         QFileInfo fileInfo(file.filePath);
@@ -126,6 +102,14 @@ bool SortFunction::SortFileByTimePoint()
             QMessageBox::warning(nullptr, "错误", "文件按时间分类失败：" + file.fileName);
             return false;
         }
+
+        file.filePath = newFilePath;
+        file.fileName = newFileName;
+
+        if (i != fileNum - 1)
+        {
+            fileIt--;
+        }
     }
 
     QMessageBox::information(nullptr, "成功", "按时间区间分类完成！");
@@ -135,6 +119,7 @@ bool SortFunction::SortFileByTimePoint()
 //文件类型分类
 bool SortFunction::SortFileByFileType()
 {
+    //  获取分类规则
     DetailInfo* rule = manager->GetOperatorContent();
     if (!rule)
     {
@@ -149,17 +134,25 @@ bool SortFunction::SortFileByFileType()
         return false;
     }
 
-    std::vector<Files> fileList = GetFileList(manager);
-    if (fileList.empty())
+    //  获取文件总数
+    int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
     {
         QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
         return false;
     }
 
-    // 逐个文件：加类型标签重命名
-    for (int i = 0; i < fileList.size(); i++)
+    std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+    if (!fileIt._Ptr)
     {
-        Files file = fileList[i];
+        QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
+        return false;
+    }
+
+    //  逐个文件分类
+    for (int i = 0; i < fileNum; i++)
+    {
+        Files& file = *fileIt; 
         QString suffix = file.suffix;
         if (suffix.isEmpty())
         {
@@ -178,35 +171,45 @@ bool SortFunction::SortFileByFileType()
             }
         }
         if (!isTarget)
+        {
+            if (i != fileNum - 1)
+            {
+                fileIt--;
+            }
             continue;
+        }
 
+        // 原文件目录创建类型文件夹
         QFileInfo fileInfo(file.filePath);
         QString fileDir = fileInfo.path();
-
-        QString newFileName = file.prefix + "_type_" + suffix + "." + file.suffix;
-        if (file.suffix.isEmpty())
+        QDir folder;
+        QString folderName = "sort_by_type_" + suffix;
+        QString folderPath = fileDir + "/" + folderName;
+        if (!folder.exists(folderPath))
         {
-            newFileName = file.prefix + "_type_" + suffix;
+            folder.mkdir(folderPath);
         }
-        QString newFilePath = fileDir + "/" + newFileName;
 
-        // 处理重名
+        // 移动文件
+        QString oldPath = file.filePath;
+        QString newPath = folderPath + "/" + file.fileName;
         int num = 1;
-        while (QFile::exists(newFilePath))
+        while (QFile::exists(newPath))
         {
-            newFileName = file.prefix + "_type_" + suffix + "_" + QString::number(num) + "." + file.suffix;
-            if (file.suffix.isEmpty()) {
-                newFileName = file.prefix + "_type_" + suffix + "_" + QString::number(num);
-            }
-            newFilePath = fileDir + "/" + newFileName;
+            newPath = folderPath + "/" + file.prefix + "_" + QString::number(num) + "." + file.suffix;
             num++;
         }
 
-        // 执行重命名
-        if (!QFile::rename(file.filePath, newFilePath))
+        // 执行移动
+        if (!QFile::rename(oldPath, newPath))
         {
-            QMessageBox::warning(nullptr, "错误", "文件按类型分类失败：" + file.fileName);
+            QMessageBox::warning(nullptr, "错误", "文件移动失败：" + file.fileName);
             return false;
+        }
+
+        if (i != fileNum - 1)
+        {
+            fileIt--;
         }
     }
 
