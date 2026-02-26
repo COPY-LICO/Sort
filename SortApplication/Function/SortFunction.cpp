@@ -37,13 +37,34 @@ bool SortFunction::SureSortOperator()
     }
     else if (infoType->chooseForm == ChooseForm::Rename) //采用重命名
     {
-        //未开发
-        return false;
+        if (infoType->renameType == RenameType::renamePrefix)
+        {
+            //获取信息 - 调用添加前缀函数
+            return this->RenameFileByPrefix();
+        }
+        else if (infoType->renameType == RenameType::renameSuffix)
+        {
+            //获取信息 - 调用修改后缀函数
+            return this->RenameFileBySuffix();
+        }
+        else if (infoType->renameType == RenameType::renameByKeyWord)
+        {
+            //获取信息 - 调用统一名称函数
+            return this->RenameFileByKeyWord();
+        }
     }
 
     return false;
 }
-//时间区间分类
+//撤回函数
+bool SortFunction::WithDrawOperator()
+{
+    return false;
+}
+
+//槽函数 -- --
+
+// //时间区间分类
 bool SortFunction::SortFileByTimePoint()
 {
     //  获取分类规则
@@ -239,6 +260,24 @@ bool SortFunction::SortFileByFileSize()
 }
 
 bool SortFunction::WithDrawOperator()
+{
+    return false;
+}
+
+//添加前缀重命名
+bool SortFunction::RenameFileByPrefix()
+{
+    return false;
+}
+
+//统一修改后缀重命名
+bool SortFunction::RenameFileBySuffix()
+{
+    return false;
+}
+
+//统一名称重命名
+bool SortFunction::RenameFileByKeyWord()
 {
     return false;
 }

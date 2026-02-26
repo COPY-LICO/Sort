@@ -276,9 +276,32 @@ std::vector<RecordFiles>::iterator ManagerMent::GetRecordFilesGroup()
 	return this->_recordFileGroup.end();;
 }
 
+//清空记录文件夹
 void ManagerMent::ClearAllRecordFiles()
 {
 	this->_recordFileGroup.clear();
+}
+
+//保存分类文件夹的记录路径
+bool ManagerMent::SaveMovePath(QString movePath)
+{
+	if (movePath == "")
+	{
+		//输入为空
+		return false;
+	}
+	else
+	{
+		this->movePath = movePath;
+		return true;
+	}
+
+	return false;
+}
+//获取分类文件夹的记录路径
+QString ManagerMent::GetMovePath()
+{
+	return this->movePath;
 }
 
 //以下为调试代码

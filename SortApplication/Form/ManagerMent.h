@@ -35,11 +35,15 @@ public:
 	//获取当前操作内容细节
 	DetailInfo* GetOperatorContent();
 	//保存历史文件记录
-	bool SaveRecordFiles(QString, QString, QString, QString);
+	bool SaveRecordFiles(QString oldFileName, QString newFileName, QString oldFilePath, QString newFilePath);
 	//获取历史文件记录 - 迭代器 - 指向最后一个文件
 	std::vector<RecordFiles>::iterator GetRecordFilesGroup();
 	//清空最后历史记录文件
 	void ClearAllRecordFiles();
+	//保存分类文件夹的记录路径
+	bool SaveMovePath(QString);
+	//获取分类文件夹的记录路径
+	QString GetMovePath();
 
 
 	//调试代码 - 打印所有存入文件的信息
@@ -83,6 +87,8 @@ private:
 	//操作内容
 	InfoGroup infoGroup; // 操作类型
 	DetailInfo detailGroup; // 操作细节
+	//分类路径
+	QString movePath;
 
 };
 
