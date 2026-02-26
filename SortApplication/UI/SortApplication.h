@@ -43,6 +43,8 @@ private slots:
     void OnFileTypeCheckBoxToggled(bool checked);
     //开始执行操作
     void OnStartButtonClicked();
+    //选择储存文件的文件夹
+    void OnSelectFolderClicked();
   
 
 private:

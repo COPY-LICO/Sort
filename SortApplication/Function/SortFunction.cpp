@@ -77,11 +77,6 @@ bool SortFunction::SortFileByTimePoint()
 
     //  获取文件总数
     int fileNum = manager->GetNowFilesNum();
-    if (fileNum <= 0)
-    {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
-        return false;
-    }
 
     std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
     if (!fileIt._Ptr)
@@ -255,11 +250,6 @@ bool SortFunction::SortFileByFileType()
 
 //文件大小分类
 bool SortFunction::SortFileByFileSize()
-{
-    return false;
-}
-
-bool SortFunction::WithDrawOperator()
 {
     return false;
 }

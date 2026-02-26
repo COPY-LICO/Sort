@@ -47,6 +47,9 @@ SortApplication::SortApplication(QWidget* parent)
     connect(ui.Start_pushButton, &QPushButton::clicked, this, &SortApplication::OnStartButtonClicked);
 
 
+    //绑定选择文件夹信号与槽
+    connect(ui.selectFolder_pushButton, &QPushButton::clicked, this, &SortApplication::OnSelectFolderClicked);
+
 
     /*===================file_Widget===================*/
     
@@ -667,6 +670,16 @@ void SortApplication::OnStartButtonClicked()
     QString operContent = ""; //操作内容
 
 
+    //选择文件为空
+    int fileNum = _manager->GetNowFilesNum();
+    if (fileNum <= 0)
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        return ;
+    }
+
+
+
     //判断是分类还是重命名
     /*===分类===*/
     if (ui.sortRadioButton->isChecked())
@@ -680,6 +693,7 @@ void SortApplication::OnStartButtonClicked()
         int largeFile = -1;
         int smallFile = -1;
         std::vector<QString>typeGroup;
+
 
         //时间
         if (ui.time_radioButton->isChecked())
@@ -798,6 +812,15 @@ void SortApplication::OnStartButtonClicked()
             QMessageBox::warning(this, "Wrong", "Please Select the SortType!");
             return;
         }
+
+
+        //选择存储文件夹
+        if (_manager->GetMovePath().isEmpty())
+        {
+            QMessageBox::warning(this, "Wrong", "Please select the storage address!");
+            return;
+        }
+
 
         //将内容传入后端
         _manager->SaveOperatorType(ChooseForm::Sort, sortType);
@@ -993,7 +1016,26 @@ void SortApplication::ClearItem()
     ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
 }
 
+//选择储存文件的文件夹
+void SortApplication::OnSelectFolderClicked()
+{
+    ManagerMent* _manager = ManagerMent::GetInstance();
 
+    // 弹出文件夹选择对话框
+    QString folderPath = QFileDialog::getExistingDirectory(
+        this,
+        "Select the storage address", 
+        "./", 
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+    );
+
+    if (!folderPath.isEmpty()) {
+        //显示路径到输入框
+        ui.selectFolder_Input->setText(folderPath);
+        //存储路径
+        _manager->SaveMovePath(folderPath);
+    }
+}
 
 
 SortApplication::~SortApplication()
