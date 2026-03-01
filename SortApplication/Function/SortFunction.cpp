@@ -66,41 +66,26 @@ bool SortFunction::WithDrawOperator()
 {
     // 获取历史记录迭代器
     std::vector<RecordFiles>::iterator recordIt = manager->GetRecordFilesGroup();
-    if (!&(*recordIt)) 
+    if (manager->IsRecordFilesEmpty()) 
     {
         QMessageBox::warning(nullptr, "提示", "暂无可撤回的操作！");
         return false;
     }
 
+    manager->PrintAllRecordFilesInfo();
+
     // 遍历所有记录，逐个恢复文件
-    int recordNum = manager->GetNowFilesNum(); 
+    int recordNum = manager->GetRecordFilesNum(); 
     for (int i = 0; i < recordNum; i++)
     {
-        RecordFiles& record = *recordIt;
-
-        if (QFile::exists(record.newFilePath))
+        QString sourcePath = recordIt->newFilePath;
+        QString movePath = recordIt->oldFilePath;
+        if (!QFile::rename(sourcePath, movePath))
         {
-            bool ret = QFile::rename(record.newFilePath, record.oldFilePath);
-            if (!ret)
-            {
-                QMessageBox::warning(nullptr, "错误", "撤回失败：" + record.newFileName);
-                return false;
-            }
+            QMessageBox::warning(nullptr, "失败", "文件移动失败" + sourcePath);
         }
 
-        // 更新manager中的文件数据
-        std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
-        for (int j = 0; j < recordNum - i - 1; j++)
-        {
-            if (fileIt != manager->GetLastFilesPathGroup())
-                fileIt--;
-        }
-        Files& file = *fileIt;
-        file.filePath = record.oldFilePath;
-        file.fileName = record.oldFileName;
-
-        // 迭代器前移
-        if (i != recordNum - 1)
+        if (!(manager->IsRecordFileItPosFilesTop(recordIt)))
         {
             recordIt--;
         }
@@ -480,6 +465,7 @@ bool SortFunction::SortFileByFileSize()
 
         // 保存撤回记录
         manager->SaveRecordFiles(file.fileName, file.fileName, oldPath, newPath);
+       // qDebug() << file.fileName << '\n' << oldPath << '\n' << newPath;
 
         // 更新原数据
         file.filePath = newPath;

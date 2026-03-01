@@ -44,6 +44,15 @@ public:
 	bool SaveMovePath(QString);
 	//获取分类文件夹的记录路径
 	QString GetMovePath();
+	//返回历史记录中的文件数量
+	int GetRecordFilesNum();
+
+	//安全函数 - 判断历史记录文件是否为空
+	bool IsRecordFilesEmpty();
+	//安全函数 - 判断文件迭代器是否达到头部顶点
+	bool IsFileItPosFilesTop(std::vector<Files>::iterator it);
+	//安全函数 - 判断历史文件迭代器是否达到头部顶点
+	bool IsRecordFileItPosFilesTop(std::vector<RecordFiles>::iterator it);
 
 
 	//调试代码 - 打印所有存入文件的信息

@@ -246,7 +246,7 @@ bool ManagerMent::SaveRecordFiles(QString oldFileName, QString newFileName, QStr
 	RecordFiles tempRecord;
 	tempRecord.oldFileName = oldFileName;
 	tempRecord.newFileName = newFileName;
-	tempRecord.oldFileName = oldFilePath;
+	tempRecord.oldFilePath = oldFilePath;
 	tempRecord.newFilePath = newFilePath;
 
 	//存入数据 
@@ -304,6 +304,38 @@ QString ManagerMent::GetMovePath()
 	return this->movePath;
 }
 
+//获取历史文件记录中的记录数目
+int ManagerMent::GetRecordFilesNum()
+{
+	return this->_recordFileGroup.size();
+}
+
+//安全函数 - 判断历史记录是否为空
+bool ManagerMent::IsRecordFilesEmpty()
+{
+	if (this->_recordFileGroup.empty())
+		return true;
+	else
+		return false;
+}
+
+//安全函数 - 判断文件迭代器是否达到头部顶点
+bool ManagerMent::IsFileItPosFilesTop(std::vector<Files>::iterator it)
+{
+	if (it == this->_fileGroup.begin())
+		return true;
+	else
+		return false;
+}
+//安全函数 - 判断历史文件迭代器是否达到头部顶点
+bool ManagerMent::IsRecordFileItPosFilesTop(std::vector<RecordFiles>::iterator it)
+{
+	if (it == this->_recordFileGroup.begin())
+		return true;
+	else
+		return false;
+}
+
 //以下为调试代码
 
 //打印所有文件数据
@@ -320,6 +352,7 @@ void ManagerMent::PrintAllFilesInfo()
 			fileIt--;
 		}
 	}
+	qDebug() << this->movePath;
 }
 
 //手动存入文件数据
@@ -354,8 +387,10 @@ void ManagerMent::PrintAllOperation()
 void ManagerMent::PrintAllRecordFilesInfo()
 {
 	vector<RecordFiles>::iterator fileIt = this->GetRecordFilesGroup();
+	qDebug() << "fileNum:" << this->GetRecordFilesNum();
+	qDebug() << "Success Print";
 
-	for (int i = this->GetNowFilesNum(); i > 0; i--)
+	for (int i = this->GetRecordFilesNum(); i > 0; i--)
 	{
 		qDebug() << "oldFileName: " << (*fileIt).oldFileName << "   newFileName: " << (*fileIt).newFileName;
 		qDebug() << "oldFilePath: " << (*fileIt).oldFilePath << "   newFilePath: " << (*fileIt).newFilePath;

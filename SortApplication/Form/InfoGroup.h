@@ -13,7 +13,6 @@ enum SortType
 	byTimePoints,
 	byFileTypes,
 	byFileSize,
-
 };
 
 enum RenameType
