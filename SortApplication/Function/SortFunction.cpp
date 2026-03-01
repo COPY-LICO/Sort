@@ -5,6 +5,7 @@
 #include <qmessagebox.h>
 #include <qdebug.h>  
 #include <QFileInfo>
+#include <QFileDialog>
 
 SortFunction::SortFunction(QWidget* parent) : QObject(parent)
 {
@@ -139,6 +140,33 @@ bool SortFunction::SortFileByTimePoint()
         return false;
     }
 
+    // 获取用户指定的分类结果路径
+    QString userSpecifiedPath = manager->GetMovePath();
+    if (userSpecifiedPath.isEmpty())
+    {
+        // 如果未设置路径，弹出对话框让用户选择
+        userSpecifiedPath = QFileDialog::getExistingDirectory(nullptr, "选择分类结果保存路径", QDir::homePath());
+        if (userSpecifiedPath.isEmpty())
+        {
+            QMessageBox::warning(nullptr, "错误", "未指定分类结果保存路径！");
+            return false;
+        }
+        // 保存用户选择的路径到manager
+        manager->SaveMovePath(userSpecifiedPath);
+    }
+
+    // 确保用户指定的路径存在
+    QDir userDir(userSpecifiedPath);
+    if (!userDir.exists())
+    {
+        // 不存在则创建
+        if (!userDir.mkpath(userSpecifiedPath))
+        {
+            QMessageBox::warning(nullptr, "错误", "创建用户指定路径失败！");
+            return false;
+        }
+    }
+
     //  逐个文件重命名分类
     for (int i = 0; i < fileNum; i++)
     {
@@ -150,15 +178,15 @@ bool SortFunction::SortFileByTimePoint()
         QString timeTag;
         if (rule->byYear && rule->byYear_Month)
         {
-            timeTag = "time_" + year + "_" + month + "_";
+            timeTag = year + "_" + month;
         }
         else if (rule->byYear)
         {
-            timeTag = "time_" + year + "_";
+            timeTag =year;
         }
         else if (rule->byYear_Month)
         {
-            timeTag = "time_" + month + "_";
+            timeTag =  month ;
         }
         else
         {
@@ -166,12 +194,10 @@ bool SortFunction::SortFileByTimePoint()
             return false;
         }
 
-        // 原文件目录创建时间文件夹
-        QFileInfo fileInfo(file.filePath);
-        QString fileDir = fileInfo.path();
+        // 文件夹创建到用户指定路径
         QDir folder;
         QString folderName = "sort_by_time_" + timeTag;
-        QString folderPath = fileDir + "/" + folderName;
+        QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
             folder.mkdir(folderPath);
@@ -244,6 +270,30 @@ bool SortFunction::SortFileByFileType()
         return false;
     }
 
+    // 获取用户指定的分类结果路径
+    QString userSpecifiedPath = manager->GetMovePath();
+    if (userSpecifiedPath.isEmpty())
+    {
+        // 弹出对话框让用户选择路径
+        userSpecifiedPath = QFileDialog::getExistingDirectory(nullptr, "选择分类结果保存路径", QDir::homePath());
+        if (userSpecifiedPath.isEmpty())
+        {
+            QMessageBox::warning(nullptr, "错误", "未指定分类结果保存路径！");
+            return false;
+        }
+        manager->SaveMovePath(userSpecifiedPath);
+    }
+
+    // 确保用户指定的路径存在
+    QDir userDir(userSpecifiedPath);
+    if (!userDir.exists())
+    {
+        if (!userDir.mkpath(userSpecifiedPath))
+        {
+            QMessageBox::warning(nullptr, "错误", "创建用户指定路径失败！");
+            return false;
+        }
+    }
     //  逐个文件分类
     for (int i = 0; i < fileNum; i++)
     {
@@ -275,11 +325,9 @@ bool SortFunction::SortFileByFileType()
         }
 
         // 原文件目录创建类型文件夹
-        QFileInfo fileInfo(file.filePath);
-        QString fileDir = fileInfo.path();
         QDir folder;
         QString folderName = "sort_by_type_" + suffix;
-        QString folderPath = fileDir + "/" + folderName;
+        QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
             folder.mkdir(folderPath);
@@ -319,9 +367,132 @@ bool SortFunction::SortFileByFileType()
 //文件大小分类
 bool SortFunction::SortFileByFileSize()
 {
-    return false;
-}
+    // 获取分类规则
+    DetailInfo* rule = manager->GetOperatorContent();
+    if (!rule)
+    {
+        QMessageBox::warning(nullptr, "错误", "获取大小分类规则失败！");
+        return false;
+    }
 
+    int largeFile = rule->largeFile;
+    int smallFile = rule->smallFile;
+
+    // 校验参数
+    if (largeFile < 0 && smallFile < 0)
+    {
+        QMessageBox::warning(nullptr, "错误", "文件大小参数设置错误！");
+        return false;
+    }
+
+    // 获取文件总数
+    int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        return false;
+    }
+
+    std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+    if (!&(*fileIt))
+    {
+        QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
+        return false;
+    }
+
+    // 获取用户指定的分类结果路径
+    QString userSpecifiedPath = manager->GetMovePath();
+    if (userSpecifiedPath.isEmpty())
+    {
+        // 弹出对话框让用户选择路径
+        userSpecifiedPath = QFileDialog::getExistingDirectory(nullptr, "选择分类结果保存路径", QDir::homePath());
+        if (userSpecifiedPath.isEmpty())
+        {
+            QMessageBox::warning(nullptr, "错误", "未指定分类结果保存路径！");
+            return false;
+        }
+        manager->SaveMovePath(userSpecifiedPath);
+    }
+
+    // 确保用户指定的路径存在
+    QDir userDir(userSpecifiedPath);
+    if (!userDir.exists())
+    {
+        if (!userDir.mkpath(userSpecifiedPath))
+        {
+            QMessageBox::warning(nullptr, "错误", "创建用户指定路径失败！");
+            return false;
+        }
+    }
+
+    // 逐个文件分类
+    for (int i = 0; i < fileNum; i++)
+    {
+        Files& file = *fileIt;
+        int fileSize = file.size;
+        int fileSizeKB = fileSize / 1024;
+
+        QDir folder;
+        QString folderName;
+
+        // 判断文件大小分类
+        if (smallFile >= 0 && largeFile >= 0)
+        {
+            if (fileSizeKB <= smallFile)
+                folderName = "sort_by_size_small";
+            else if (fileSizeKB >= largeFile)
+                folderName = "sort_by_size_large";
+            else
+                folderName = "sort_by_size_mid";
+        }
+        else if (smallFile >= 0)
+        {
+            folderName = fileSizeKB <= smallFile ? "sort_by_size_small" : "sort_by_size_large";
+        }
+        else if (largeFile >= 0)
+        {
+            folderName = fileSizeKB >= largeFile ? "sort_by_size_large" : "sort_by_size_small";
+        }
+
+        // 文件夹创建到用户指定路径
+        QString folderPath = userSpecifiedPath + "/" + folderName;
+        if (!folder.exists(folderPath))
+        {
+            folder.mkdir(folderPath);
+        }
+
+        // 移动文件
+        QString oldPath = file.filePath;
+        QString newPath = folderPath + "/" + file.fileName;
+        int num = 1;
+        while (QFile::exists(newPath))
+        {
+            newPath = folderPath + "/" + file.prefix + "_" + QString::number(num) + "." + file.suffix;
+            num++;
+        }
+
+        // 执行移动
+        if (!QFile::rename(oldPath, newPath))
+        {
+            QMessageBox::warning(nullptr, "错误", "文件移动失败：" + file.fileName);
+            return false;
+        }
+
+        // 保存撤回记录
+        manager->SaveRecordFiles(file.fileName, file.fileName, oldPath, newPath);
+
+        // 更新原数据
+        file.filePath = newPath;
+
+        if (i != fileNum - 1)
+        {
+            fileIt--;
+        }
+    }
+
+    QMessageBox::information(nullptr, "成功", "按文件大小分类完成！");
+    return true;
+}
 //添加前缀重命名
 bool SortFunction::RenameFileByPrefix()
 {
