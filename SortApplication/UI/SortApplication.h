@@ -45,7 +45,8 @@ private slots:
     void OnStartButtonClicked();
     //选择储存文件的文件夹
     void OnSelectFolderClicked();
-  
+    //执行撤回操作
+    void OnWithdrawClicked();
 
 private:
     Ui::SortApplicationClass ui;

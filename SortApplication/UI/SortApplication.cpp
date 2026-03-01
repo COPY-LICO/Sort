@@ -51,6 +51,10 @@ SortApplication::SortApplication(QWidget* parent)
     connect(ui.selectFolder_pushButton, &QPushButton::clicked, this, &SortApplication::OnSelectFolderClicked);
 
 
+    //绑定执行撤回信号与槽
+    connect(ui.Withdraw_pushButton, &QPushButton::clicked, this, &SortApplication::OnWithdrawClicked);
+
+
     /*===================file_Widget===================*/
     
     //实现点击fileSelectorWidget与iconLabel_CloudRecord、textLabel_select1、textLabel_select2任意一个都打开文件夹：
@@ -1035,6 +1039,15 @@ void SortApplication::OnSelectFolderClicked()
         //存储路径
         _manager->SaveMovePath(folderPath);
     }
+}
+
+//执行撤回操作
+void SortApplication::OnWithdrawClicked()
+{
+    ManagerMent* _manager = ManagerMent::GetInstance();
+
+    //触发撤回操作信号
+    emit _manager->StartWithDrawOperator();
 }
 
 
