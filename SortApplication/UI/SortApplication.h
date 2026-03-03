@@ -47,6 +47,8 @@ private slots:
     void OnSelectFolderClicked();
     //执行撤回操作
     void OnWithdrawClicked();
+    //打开历史信息窗口
+    void onHistoryItemClicked(QListWidgetItem* item);
 
 private:
     Ui::SortApplicationClass ui;

@@ -98,6 +98,7 @@
     <QtMoc Include="UI\SortApplication.h" />
     <ClCompile Include="Form\ManagerMent.cpp" />
     <ClCompile Include="Function\SortFunction.cpp" />
+    <ClCompile Include="UI\HistoryInfo.cpp" />
     <ClCompile Include="UI\SortApplication.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -108,6 +109,7 @@
     <ClInclude Include="Form\Files.h" />
     <ClInclude Include="Form\InfoGroup.h" />
     <ClInclude Include="Form\InfoGruop.h" />
+    <QtMoc Include="UI\HistoryInfo.h" />
     <QtMoc Include="Function\SortFunction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

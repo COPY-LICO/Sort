@@ -1,6 +1,7 @@
 #include "SortApplication.h"
 #include "ManagerMent.h"
 #include "SortFunction.h"
+#include "HistoryInfo.h"
 #include <QTimer>
 #include <QSize>
 #include <QListWidgetItem>
@@ -54,6 +55,8 @@ SortApplication::SortApplication(QWidget* parent)
     //绑定执行撤回信号与槽
     connect(ui.Withdraw_pushButton, &QPushButton::clicked, this, &SortApplication::OnWithdrawClicked);
 
+    //绑定点击打开历史信息信号与槽
+    connect(ui.historyRecord_listWidget, &QListWidget::itemClicked,this, &SortApplication::onHistoryItemClicked);
 
     /*===================file_Widget===================*/
     
@@ -1033,7 +1036,8 @@ void SortApplication::OnSelectFolderClicked()
         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
     );
 
-    if (!folderPath.isEmpty()) {
+    if (!folderPath.isEmpty()) 
+    {
         //显示路径到输入框
         ui.selectFolder_Input->setText(folderPath);
         //存储路径
@@ -1048,6 +1052,16 @@ void SortApplication::OnWithdrawClicked()
 
     //触发撤回操作信号
     emit _manager->StartWithDrawOperator();
+}
+
+//打开历史信息窗口
+void SortApplication::onHistoryItemClicked(QListWidgetItem* item)
+{
+    if (!item) return;
+
+    HistoryInfo* dialog = new HistoryInfo(this);
+    QString itemText = item->text().isEmpty() ? "HistoryInfo" : item->text();
+    dialog->show();
 }
 
 
