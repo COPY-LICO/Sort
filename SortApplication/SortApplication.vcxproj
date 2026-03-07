@@ -94,6 +94,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="UI\SortApplication.qrc" />
+    <QtUic Include="UI\HistoryInfo.ui" />
     <QtUic Include="UI\SortApplication.ui" />
     <QtMoc Include="UI\SortApplication.h" />
     <ClCompile Include="Form\ManagerMent.cpp" />

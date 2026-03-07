@@ -2,13 +2,12 @@
 
 HistoryInfo::HistoryInfo(QWidget* parent) : QDialog(parent)
 {
-	setWindowTitle("HistoryInfo");
-	resize(400, 300); // 窗口大小
+	dialogui.setupUi(this);
 
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	QLabel* tipLabel = new QLabel("HistoryInfo", this);
-	tipLabel->setAlignment(Qt::AlignCenter);
-	layout->addWidget(tipLabel);
+	//设置主Widget布局
+	QVBoxLayout* layout = new QVBoxLayout(dialogui.Dmain_Widget);
+	
+
 }
 
 HistoryInfo::~HistoryInfo()

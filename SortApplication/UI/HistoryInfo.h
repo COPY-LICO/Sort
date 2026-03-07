@@ -1,7 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "ui_SortApplication.h"
+#include "ui_HistoryInfo.h"
+#include "SortApplication.h"
 #include <QFileDialog>
 #include <QDialog>
 #include <QVBoxLayout>
@@ -16,5 +17,8 @@ public:
 
 
 	~HistoryInfo();
+
+private:
+	Ui::Dialog dialogui;
 
 };
