@@ -482,17 +482,236 @@ bool SortFunction::SortFileByFileSize()
 //添加前缀重命名
 bool SortFunction::RenameFileByPrefix()
 {
-    return false;
+    // 获取重命名规则
+    DetailInfo* rule = manager->GetOperatorContent();
+    if (!rule)
+    {
+        QMessageBox::warning(nullptr, "错误", "获取重命名规则失败！");
+        return false;
+    }
+
+    QString prefix = rule->renameContent;
+    if (prefix.isEmpty())
+    {
+        QMessageBox::warning(nullptr, "提示", "前缀内容不能为空！");
+        return false;
+    }
+
+    // 获取文件总数
+    int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可重命名！");
+        return false;
+    }
+
+    std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+    if (!&(*fileIt))
+    {
+        QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
+        return false;
+    }
+
+    // 逐个文件添加前缀
+    for (int i = 0; i < fileNum; i++)
+    {
+        Files& file = *fileIt;
+        QFileInfo fileInfo(file.filePath);
+        QString fileDir = fileInfo.path();
+        QString oldFileName = file.fileName;
+        QString newFileName = prefix + "_" + oldFileName;
+        QString newFilePath = fileDir + "/" + newFileName;
+
+        // 处理重名
+        int num = 1;
+        while (QFile::exists(newFilePath))
+        {
+            newFileName = prefix + "_" + file.prefix + "_" + QString::number(num) + "." + file.suffix;
+            newFilePath = fileDir + "/" + newFileName;
+            num++;
+        }
+
+        // 执行重命名
+        if (!QFile::rename(file.filePath, newFilePath))
+        {
+            QMessageBox::warning(nullptr, "错误", "文件重命名失败：" + file.fileName);
+            return false;
+        }
+
+        // 保存撤回记录
+        manager->SaveRecordFiles(oldFileName, newFileName, file.filePath, newFilePath);
+
+        // 更新原数据
+        file.filePath = newFilePath;
+        file.fileName = newFileName;
+
+        if (i != fileNum - 1)
+        {
+            fileIt--;
+        }
+    }
+
+    QMessageBox::information(nullptr, "成功", "添加前缀重命名完成！");
+    return true;
 }
 
 //统一修改后缀重命名
 bool SortFunction::RenameFileBySuffix()
 {
-    return false;
+    // 获取重命名规则
+    DetailInfo* rule = manager->GetOperatorContent();
+    if (!rule)
+    {
+        QMessageBox::warning(nullptr, "错误", "获取重命名规则失败！");
+        return false;
+    }
+
+    QString newSuffix = rule->renameContent;
+    if (newSuffix.isEmpty())
+    {
+        QMessageBox::warning(nullptr, "提示", "后缀内容不能为空！");
+        return false;
+    }
+    // 统一后缀格式
+    if (newSuffix.startsWith("."))
+    {
+        newSuffix = newSuffix.mid(1);
+    }
+
+    // 获取文件总数
+    int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可重命名！");
+        return false;
+    }
+
+    std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+    if (!&(*fileIt))
+    {
+        QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
+        return false;
+    }
+
+    // 逐个文件修改后缀
+    for (int i = 0; i < fileNum; i++)
+    {
+        Files& file = *fileIt;
+        QFileInfo fileInfo(file.filePath);
+        QString fileDir = fileInfo.path();
+        QString oldFileName = file.fileName;
+        // 新文件名：原前缀 + 统一后缀
+        QString newFileName = file.prefix + "." + newSuffix;
+        QString newFilePath = fileDir + "/" + newFileName;
+
+        // 处理重名
+        int num = 1;
+        while (QFile::exists(newFilePath))
+        {
+            newFileName = file.prefix + "_" + QString::number(num) + "." + newSuffix;
+            newFilePath = fileDir + "/" + newFileName;
+            num++;
+        }
+
+        // 执行重命名
+        if (!QFile::rename(file.filePath, newFilePath))
+        {
+            QMessageBox::warning(nullptr, "错误", "文件重命名失败：" + file.fileName);
+            return false;
+        }
+
+        // 保存撤回记录
+        manager->SaveRecordFiles(oldFileName, newFileName, file.filePath, newFilePath);
+
+        // 更新原数据
+        file.filePath = newFilePath;
+        file.fileName = newFileName;
+        file.suffix = newSuffix;
+
+        if (i != fileNum - 1)
+        {
+            fileIt--;
+        }
+    }
+
+    QMessageBox::information(nullptr, "成功", "统一修改后缀完成！");
+    return true;
 }
 
 //统一名称重命名
 bool SortFunction::RenameFileByKeyWord()
 {
-    return false;
+    // 获取重命名规则
+    DetailInfo* rule = manager->GetOperatorContent();
+    if (!rule)
+    {
+        QMessageBox::warning(nullptr, "错误", "获取重命名规则失败！");
+        return false;
+    }
+
+    QString keyWord = rule->renameContent;
+    if (keyWord.isEmpty())
+    {
+        QMessageBox::warning(nullptr, "提示", "统一名称不能为空！");
+        return false;
+    }
+
+    // 获取文件总数
+    int fileNum = manager->GetNowFilesNum();
+    if (fileNum <= 0)
+    {
+        QMessageBox::warning(nullptr, "提示", "暂无文件可重命名！");
+        return false;
+    }
+
+    std::vector<Files>::iterator fileIt = manager->GetLastFilesPathGroup();
+    if (!&(*fileIt))
+    {
+        QMessageBox::warning(nullptr, "错误", "文件列表指针为空！");
+        return false;
+    }
+
+    // 逐个文件统一命名
+    for (int i = 0; i < fileNum; i++)
+    {
+        Files& file = *fileIt;
+        QFileInfo fileInfo(file.filePath);
+        QString fileDir = fileInfo.path();
+        QString oldFileName = file.fileName;
+        // 新文件名：统一关键词 + 序号 + 原后缀
+        QString newFileName = keyWord + "_" + QString::number(i + 1) + "." + file.suffix;
+        QString newFilePath = fileDir + "/" + newFileName;
+
+        // 处理重名
+        int num = 1;
+        while (QFile::exists(newFilePath))
+        {
+            newFileName = keyWord + "_" + QString::number(i + 1) + "_" + QString::number(num) + "." + file.suffix;
+            newFilePath = fileDir + "/" + newFileName;
+            num++;
+        }
+
+        // 执行重命名
+        if (!QFile::rename(file.filePath, newFilePath))
+        {
+            QMessageBox::warning(nullptr, "错误", "文件重命名失败：" + file.fileName);
+            return false;
+        }
+
+        // 保存撤回记录
+        manager->SaveRecordFiles(oldFileName, newFileName, file.filePath, newFilePath);
+
+        // 更新原数据
+        file.filePath = newFilePath;
+        file.fileName = newFileName;
+        file.prefix = keyWord + "_" + QString::number(i + 1);
+
+        if (i != fileNum - 1)
+        {
+            fileIt--;
+        }
+    }
+
+    QMessageBox::information(nullptr, "成功", "统一名称重命名完成！");
+    return true;
 }
