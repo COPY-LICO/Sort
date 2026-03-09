@@ -10,6 +10,7 @@ ManagerMent::ManagerMent(QObject* parent) : QObject(parent)
 	//私有化构造函数用于处理对象
 	this->InitalBackSuffix();
 //	this->_historyManager = HistoryManager::GetInstance();
+	connect(this, &ManagerMent::EndOperator, this, &ManagerMent::LastOperator);
 }
 
 void ManagerMent::InitalBackSuffix()
@@ -188,13 +189,6 @@ bool ManagerMent::IsFileExistByPath(const QString& filePath)
 		}
 	}
 	return false;
-}
-
-
-//调用 - 完成执行系列操作
-void ManagerMent::LastOperator()
-{
-	this->ImportRecordToAllGroup();
 }
 
 
@@ -421,7 +415,29 @@ int ManagerMent::GetNowRecordNum()
 	return this->_recordFileAllGroup.size();
 }
 
+//索引自减
+void ManagerMent::IndexDecrement()
+{
+	_index--;
+}
 
+//索引自增
+void ManagerMent::IndexIncrement()
+{
+	_index++;
+}
+
+//获得当前索引
+int ManagerMent::GetIndex()
+{
+	return _index;
+}
+
+//调用 - 完成执行系列操作
+void ManagerMent::LastOperator()
+{
+	this->ImportRecordToAllGroup();
+}
 
 //将临时文件导入到存储数组中
 bool ManagerMent::ImportRecordToAllGroup()

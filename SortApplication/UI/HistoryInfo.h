@@ -14,14 +14,16 @@ class HistoryInfo : public QDialog
 	Q_OBJECT
 
 public:
-	HistoryInfo(QWidget* parent = nullptr);
+	HistoryInfo(int historyIndex, QWidget* parent = nullptr);
 
-	//½«Ô­ÎÄ¼þÖÃÈëÁÐ±í
+	//ï¿½ï¿½Ô­ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 	void AddOriginalFiles(std::vector<IntegratedContent>HistoryFiles);
 
 	~HistoryInfo();
 
 private:
 	Ui::Dialog dialogui;
+	//ï¿½ï¿½Ê·ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
+	int _historyIndex;
 
 };

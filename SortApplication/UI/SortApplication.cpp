@@ -920,6 +920,9 @@ void SortApplication::OnStartButtonClicked()
 //新增历史记录
 void SortApplication::AddHistoryItem(const QString& operName, const QString& operMode, const QString& operContent, const QString& operTime, int fileCount)
 {
+
+    ManagerMent* _manager = ManagerMent::GetInstance();
+
     //创建列表项
     QListWidgetItem* Item = new QListWidgetItem();
     Item->setSizeHint(QSize(0, 90));
@@ -995,9 +998,14 @@ void SortApplication::AddHistoryItem(const QString& operName, const QString& ope
     ui.historyRecord_listWidget->setSpacing(1); // item间距
     ui.historyRecord_listWidget->setFocusPolicy(Qt::NoFocus); // 无焦点虚线框
 
+    //储存索引
+    Item->setData(Qt::UserRole, _manager->GetIndex());
 
     // 滚动到最新的历史记录
     ui.historyRecord_listWidget->scrollToTop();
+
+    //索引自增
+    _manager->IndexIncrement();
 }
 
 //操作完成清除文件储存及显示
@@ -1059,10 +1067,15 @@ void SortApplication::onHistoryItemClicked(QListWidgetItem* item)
 {
     if (!item) return;
 
-    HistoryInfo* dialog = new HistoryInfo(this);
+    //提取item绑定的索引
+    int historyIndex = item->data(Qt::UserRole).toInt();
+    //创建HistoryInfo，传入索引
+    HistoryInfo* Historydialog = new HistoryInfo(historyIndex, this);
     QString itemText = item->text().isEmpty() ? "HistoryInfo" : item->text();
-    dialog->show();
+    Historydialog->setModal(true);  //模态窗口，防止同时打开多个
+    Historydialog->show();
 }
+
 
 
 SortApplication::~SortApplication()

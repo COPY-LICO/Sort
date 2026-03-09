@@ -98,6 +98,12 @@ public:
 	std::vector<IntegratedContent> ReturnOperationAllFileRecord(bool);
 
 
+	//索引自减
+	void IndexDecrement();
+	//索引自增
+	void IndexIncrement();
+	//获得当前索引
+	int GetIndex();
 
 
 //信号函数
@@ -136,6 +142,7 @@ private:
 	DetailInfo detailGroup; // 操作细节
 	//分类路径
 	QString movePath;
-
+	//索引
+	int _index = 0;
 };
 
