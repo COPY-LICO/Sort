@@ -1060,6 +1060,8 @@ void SortApplication::OnWithdrawClicked()
 
     //触发撤回操作信号
     emit _manager->StartWithDrawOperator();
+
+
 }
 
 //打开历史信息窗口
