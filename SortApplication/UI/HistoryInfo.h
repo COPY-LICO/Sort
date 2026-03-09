@@ -14,7 +14,7 @@ class HistoryInfo : public QDialog
 	Q_OBJECT
 
 public:
-	HistoryInfo(QWidget* parent = nullptr);
+	HistoryInfo(int historyIndex, QWidget* parent = nullptr);
 
 	//将原文件置入列表
 	void AddOriginalFiles(std::vector<IntegratedContent>HistoryFiles);
@@ -23,5 +23,7 @@ public:
 
 private:
 	Ui::Dialog dialogui;
+	//历史记录索引
+	int _historyIndex;
 
 };

@@ -2,7 +2,7 @@
 #include <QFileIconProvider>
 #include <qlabel.h>
 
-HistoryInfo::HistoryInfo(QWidget* parent) : QDialog(parent)
+HistoryInfo::HistoryInfo(int historyIndex, QWidget* parent) : QDialog(parent), _historyIndex(historyIndex)
 {
 	dialogui.setupUi(this);
 
@@ -19,7 +19,7 @@ HistoryInfo::HistoryInfo(QWidget* parent) : QDialog(parent)
 	dialogui.DoriginalFiles_listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     //获取历史文件信息
-    AddOriginalFiles(_manager->ReturnOperationAllFileRecord());
+    AddOriginalFiles(_manager->OutPortRecordToAllGroup(historyIndex));
 
 }
 

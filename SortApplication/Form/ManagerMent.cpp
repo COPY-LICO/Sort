@@ -413,6 +413,24 @@ int ManagerMent::GetNowRecordNum()
 	return this->_recordFileAllGroup.size();
 }
 
+//索引自减
+void ManagerMent::IndexDecrement()
+{
+	_index--;
+}
+
+//索引自增
+void ManagerMent::IndexIncrement()
+{
+	_index++;
+}
+
+//获得当前索引
+int ManagerMent::GetIndex()
+{
+	return _index;
+}
+
 //调用 - 完成执行系列操作
 void ManagerMent::LastOperator()
 {

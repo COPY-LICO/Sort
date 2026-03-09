@@ -14,19 +14,14 @@ public:
     
     //重写事件过滤器
     bool eventFilter(QObject* watched, QEvent* event) override;
-    
     //添加单个文件到列表
     void AddFiletoItem(const QString &filePath);
-
     //文件类型分类面板
     void InitFileTypePanel();
-
     //新增历史记录
     void AddHistoryItem(const QString& operName, const QString& operMode, const QString& operContent, const QString& operTime, int fileCount);
-
     //操作完成清除文件储存及显示
-    void ClearItem();
-    
+    void ClearItem();    
     ~SortApplication();
 
 

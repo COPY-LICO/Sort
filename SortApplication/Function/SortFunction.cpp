@@ -94,6 +94,7 @@ bool SortFunction::WithDrawOperator()
     // 清空撤回记录
     manager->ClearAllRecordFiles();
     QMessageBox::information(nullptr, "成功", "撤回操作完成！");
+    manager->IndexDecrement();
     return true;
 }
 

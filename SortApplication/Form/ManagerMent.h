@@ -81,6 +81,12 @@ public:
 	bool DeleteRecordToAllGroup(int index);
 	//获取当前历史操作数目
 	int GetNowRecordNum();
+	//索引自减
+	void IndexDecrement();
+	//索引自增
+	void IndexIncrement();
+	//获得当前索引
+	int GetIndex();
 
 //信号函数
 signals:
@@ -118,6 +124,8 @@ private:
 	DetailInfo detailGroup; // 操作细节
 	//分类路径
 	QString movePath;
+	//历史记录索引
+    int _index = 0;
 	//历史操作程序
 //	HistoryManager* _historyManager;
 };
