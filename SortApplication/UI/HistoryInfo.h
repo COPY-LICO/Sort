@@ -16,14 +16,14 @@ class HistoryInfo : public QDialog
 public:
 	HistoryInfo(int historyIndex, QWidget* parent = nullptr);
 
-	//��ԭ�ļ������б�
+	//获取历史文件信息
 	void AddOriginalFiles(std::vector<IntegratedContent>HistoryFiles);
 
 	~HistoryInfo();
 
 private:
 	Ui::Dialog dialogui;
-	//��ʷ��¼����
+	//历史记录索引
 	int _historyIndex;
 
 };

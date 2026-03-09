@@ -24,7 +24,7 @@ HistoryInfo::HistoryInfo(int historyIndex, QWidget* parent) : QDialog(parent), _
 
 }
 
-//将原文件置入列表
+//获取历史文件信息
 void HistoryInfo::AddOriginalFiles(std::vector<IntegratedContent>HistoryFiles)
 {
 	//获取实例
@@ -51,7 +51,7 @@ void HistoryInfo::AddOriginalFiles(std::vector<IntegratedContent>HistoryFiles)
 	for (const auto& content : HistoryFiles) {
 		//创建列表项
 		QListWidgetItem* item = new QListWidgetItem(dialogui.DoriginalFiles_listWidget);
-		item->setSizeHint(QSize(0, 108));
+		item->setSizeHint(QSize(0, 152));
 
 		//创建自定义Widget
 		QWidget* fileWidget = new QWidget();

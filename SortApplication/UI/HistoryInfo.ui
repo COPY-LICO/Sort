@@ -43,7 +43,7 @@
      <property name="styleSheet">
       <string notr="true">QWidget{background-color:rgb(243, 244, 246);}</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,6">
       <item>
        <widget class="QWidget" name="Dhead_Widget" native="true">
         <widget class="QLabel" name="DtextLabel_HistoryInfo">
@@ -88,36 +88,13 @@
             <string notr="true">QWidget{background-color:white;
 border-radius:20px;}</string>
            </property>
-           <widget class="QLabel" name="DtextLabel_OriginalFIles">
-            <property name="geometry">
-             <rect>
-              <x>20</x>
-              <y>20</y>
-              <width>141</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QLabel{
-color:rgb(0, 0, 0);
-}</string>
-            </property>
-            <property name="text">
-             <string>Original Files (0)</string>
-            </property>
-           </widget>
            <widget class="QListWidget" name="DoriginalFiles_listWidget">
             <property name="geometry">
              <rect>
               <x>20</x>
-              <y>60</y>
-              <width>251</width>
-              <height>361</height>
+              <y>20</y>
+              <width>561</width>
+              <height>421</height>
              </rect>
             </property>
             <property name="styleSheet">
@@ -127,14 +104,6 @@ color:rgb(0, 0, 0);
              <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
             </property>
            </widget>
-          </widget>
-         </item>
-         <item>
-          <widget class="QWidget" name="DdetailChanges_Widget" native="true">
-           <property name="styleSheet">
-            <string notr="true">QWidget{background-color:white;
-border-radius:20px;}</string>
-           </property>
           </widget>
          </item>
         </layout>
