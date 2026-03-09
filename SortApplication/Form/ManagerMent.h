@@ -17,36 +17,63 @@ public:
 	static ManagerMent* GetInstance();
 	//初始化后缀库
 	void InitalBackSuffix();
+	//临时文件导入长期存储
+	bool ImportRecordToAllGroup();
+
+
+
 	//存入文件地址
 	bool SaveFiles(QString);
+	//存入当前操作类型 - 无参数传入为初始化操作类型
+	bool SaveOperatorType(int = chooseNull, int = chooseNull);
+	//存入当前操作内容 - 无参数传入为初始化操作内容
+	bool SaveOperatorContent(bool = false, bool = false, int = chooseNull, int = chooseNull, std::vector<QString> = {}, QString = "");
+	//保存历史文件记录
+	bool SaveRecordFiles(QString oldFileName, QString newFileName, QString oldFilePath, QString newFilePath);
+	//保存分类文件夹的记录路径
+	bool SaveMovePath(QString);
+	//导出长期存储中的指定记录
+	std::vector<IntegratedContent> OutPortRecordToAllGroup(int index);
+
+
+
 	//获取文件数组中最后存入文件的迭代器
 	std::vector<Files>::iterator GetLastFilesPathGroup();
-	//返回当前文件数目
-	int GetNowFilesNum();
-	//删除最后一个文件所有信息
-	bool DeleteLastFiles();
 	//返回后缀库引用
 	std::vector<QString>& GetBackSuffix();
-	//存入当前操作类型 - 无参数传入为初始化操作类型
-	bool SaveOperatorType(int = chooseNull,int = chooseNull);
-	//存入当前操作内容 - 无参数传入为初始化操作内容
-	bool SaveOperatorContent(bool = false,bool = false,int = chooseNull,int = chooseNull, std::vector<QString> = {},QString = "");
+	//获取历史文件记录 - 迭代器 - 指向最后一个文件
+	std::vector<RecordFiles>::iterator GetRecordFilesGroup();
 	//获取当前操作类型
 	InfoGroup* GetOperatorType();
 	//获取当前操作内容细节
 	DetailInfo* GetOperatorContent();
-	//保存历史文件记录
-	bool SaveRecordFiles(QString oldFileName, QString newFileName, QString oldFilePath, QString newFilePath);
-	//获取历史文件记录 - 迭代器 - 指向最后一个文件
-	std::vector<RecordFiles>::iterator GetRecordFilesGroup();
-	//清空最后历史记录文件
-	void ClearAllRecordFiles();
-	//保存分类文件夹的记录路径
-	bool SaveMovePath(QString);
 	//获取分类文件夹的记录路径
 	QString GetMovePath();
+
+
+
+	//返回当前文件数目
+	int GetNowFilesNum();
+	//获取当前历史操作数目
+	int GetNowRecordNum();
 	//返回历史记录中的文件数量
 	int GetRecordFilesNum();
+
+
+
+	//按文件名删除文件
+	bool DeleteFileByName(const QString& fileName);
+	//删除最后一个文件所有信息
+	bool DeleteLastFiles();
+	//清空最后历史记录文件
+	void ClearAllRecordFiles();
+	//清空所有文件
+	void ClearAllFiles();
+	//移除长期存储中的指定记录
+	bool DeleteRecordToAllGroup(int index);
+
+
+
 
 	//安全函数 - 判断历史记录文件是否为空
 	bool IsRecordFilesEmpty();
@@ -54,6 +81,9 @@ public:
 	bool IsFileItPosFilesTop(std::vector<Files>::iterator it);
 	//安全函数 - 判断历史文件迭代器是否达到头部顶点
 	bool IsRecordFileItPosFilesTop(std::vector<RecordFiles>::iterator it);
+	//安全函数 - 判断文件是否重复
+	bool IsFileExistByPath(const QString& filePath);
+
 
 
 	//调试代码 - 打印所有存入文件的信息
@@ -67,20 +97,8 @@ public:
 	//调试代码 - 导出临时操作所有记录
 	std::vector<IntegratedContent> ReturnOperationAllFileRecord(bool);
 
-	//判断文件是否重复
-	bool IsFileExistByPath(const QString& filePath);
-	// 按文件名删除文件
-	bool DeleteFileByName(const QString& fileName);
-	//清空所有文件
-	void ClearAllFiles();
-	//临时文件导入长期存储
-	bool ImportRecordToAllGroup();
-	//导出长期存储中的指定记录
-	std::vector<IntegratedContent> OutPortRecordToAllGroup(int index);
-	//移除长期存储中的指定记录
-	bool DeleteRecordToAllGroup(int index);
-	//获取当前历史操作数目
-	int GetNowRecordNum();
+
+
 
 //信号函数
 signals:
@@ -118,7 +136,6 @@ private:
 	DetailInfo detailGroup; // 操作细节
 	//分类路径
 	QString movePath;
-	//历史操作程序
-//	HistoryManager* _historyManager;
+
 };
 

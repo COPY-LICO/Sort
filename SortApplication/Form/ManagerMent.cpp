@@ -174,7 +174,7 @@ vector<QString> ManagerMent::TheBackSuffix()
 	};
 }
 
-//判断文件是否重复
+//安全函数 - 判断文件是否重复
 bool ManagerMent::IsFileExistByPath(const QString& filePath)
 {
 	if (_fileGroup.empty())
@@ -189,6 +189,14 @@ bool ManagerMent::IsFileExistByPath(const QString& filePath)
 	}
 	return false;
 }
+
+
+//调用 - 完成执行系列操作
+void ManagerMent::LastOperator()
+{
+	this->ImportRecordToAllGroup();
+}
+
 
 // 按文件名删除文件
 bool ManagerMent::DeleteFileByName(const QString& fileName)
@@ -413,11 +421,7 @@ int ManagerMent::GetNowRecordNum()
 	return this->_recordFileAllGroup.size();
 }
 
-//调用 - 完成执行系列操作
-void ManagerMent::LastOperator()
-{
-	this->ImportRecordToAllGroup();
-}
+
 
 //将临时文件导入到存储数组中
 bool ManagerMent::ImportRecordToAllGroup()
