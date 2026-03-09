@@ -3,6 +3,7 @@
 #include <qstring.h>
 #include <qobject.h>
 #include <vector>
+#include "HistoryManager.h"
 #include "Files.h"
 #include "InfoGroup.h"
 //这是一个全局管理类，里面所有函数都采用单例形式，可在全局调用负责启动API接口
@@ -46,6 +47,8 @@ public:
 	QString GetMovePath();
 	//返回历史记录中的文件数量
 	int GetRecordFilesNum();
+	//返回本次操作所有记录
+	std::vector<IntegratedContent> ReturnOperationAllFileRecord();
 
 	//安全函数 - 判断历史记录文件是否为空
 	bool IsRecordFilesEmpty();
@@ -63,6 +66,8 @@ public:
 	void PrintAllOperation();
 	//调试代码 - 打印所有存入的历史文件记录
 	void PrintAllRecordFilesInfo();
+	//调式代码 - 全能输出指令
+	void PrintAllInfo();
 
 	//判断文件是否重复
 	bool IsFileExistByPath(const QString& filePath);
@@ -78,7 +83,9 @@ signals:
 signals:
 	//撤回分类信号
 	void StartWithDrawOperator();
-
+signals:
+	//执行完毕信号
+	void EndOperator();
 
 
 private:
@@ -98,6 +105,7 @@ private:
 	DetailInfo detailGroup; // 操作细节
 	//分类路径
 	QString movePath;
-
+	//历史操作程序
+//	HistoryManager* _historyManager;
 };
 

@@ -219,6 +219,8 @@ bool SortFunction::SortFileByTimePoint()
     }
 
     QMessageBox::information(nullptr, "成功", "按时间区间分类完成！");
+    //发送结束信号
+    manager->EndOperator();
     return true;
 }
 
@@ -346,6 +348,8 @@ bool SortFunction::SortFileByFileType()
     }
 
     QMessageBox::information(nullptr, "成功", "按文件类型分类完成！");
+    //发送结束信号
+    manager->EndOperator();
     return true;
 }
 
@@ -477,6 +481,8 @@ bool SortFunction::SortFileByFileSize()
     }
 
     QMessageBox::information(nullptr, "成功", "按文件大小分类完成！");
+    //发送结束信号
+    manager->EndOperator();
     return true;
 }
 //添加前缀重命名
@@ -552,6 +558,8 @@ bool SortFunction::RenameFileByPrefix()
     }
 
     QMessageBox::information(nullptr, "成功", "添加前缀重命名完成！");
+    //发送结束信号
+    manager->EndOperator();
     return true;
 }
 
@@ -635,6 +643,8 @@ bool SortFunction::RenameFileBySuffix()
     }
 
     QMessageBox::information(nullptr, "成功", "统一修改后缀完成！");
+    //发送结束信号
+    manager->EndOperator();
     return true;
 }
 
@@ -713,5 +723,7 @@ bool SortFunction::RenameFileByKeyWord()
     }
 
     QMessageBox::information(nullptr, "成功", "统一名称重命名完成！");
+    //发送结束信号
+    manager->EndOperator();
     return true;
 }
