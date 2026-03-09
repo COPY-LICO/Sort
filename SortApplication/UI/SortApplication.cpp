@@ -924,7 +924,7 @@ void SortApplication::AddHistoryItem(const QString& operName, const QString& ope
     QListWidgetItem* Item = new QListWidgetItem();
     Item->setSizeHint(QSize(0, 90));
 
-    //创建自定义WIdget显示内容
+    //创建自定义Widget显示内容
     QWidget* historyWidget = new QWidget();
     QHBoxLayout* hLayout = new QHBoxLayout(historyWidget);
     hLayout->setContentsMargins(10, 8, 10, 8);

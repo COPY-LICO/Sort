@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_HistoryInfo.h"
 #include "SortApplication.h"
+#include "ManagerMent.h"
 #include <QFileDialog>
 #include <QDialog>
 #include <QVBoxLayout>
@@ -15,6 +16,8 @@ class HistoryInfo : public QDialog
 public:
 	HistoryInfo(QWidget* parent = nullptr);
 
+	//将原文件置入列表
+	void AddOriginalFiles(std::vector<IntegratedContent>HistoryFiles);
 
 	~HistoryInfo();
 

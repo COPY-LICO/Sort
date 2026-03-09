@@ -108,7 +108,7 @@ color:rgb(0, 0, 0);
 }</string>
             </property>
             <property name="text">
-             <string>Original Files</string>
+             <string>Original Files (0)</string>
             </property>
            </widget>
            <widget class="QListWidget" name="DoriginalFiles_listWidget">
