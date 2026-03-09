@@ -389,6 +389,43 @@ std::vector<IntegratedContent> ManagerMent::ReturnOperationAllFileRecord()
 	return temp;
 }
 
+//导出长期存储中的指定记录
+std::vector<IntegratedContent> ManagerMent::OutPortRecordToAllGroup(int index)
+{
+	return this->_recordFileAllGroup[index];
+}
+
+//删除长期存储中的指定记录
+bool ManagerMent::DeleteRecordToAllGroup(int index)
+{
+	if (index <= this->_recordFileAllGroup.size() - 1)
+	{
+		this->_recordFileAllGroup.erase(this->_recordFileAllGroup.begin() + index);
+		return true;
+	}
+	else
+		return false;
+}
+
+//获取当前历史操作数目
+int ManagerMent::GetNowRecordNum()
+{
+	return this->_recordFileAllGroup.size();
+}
+
+//调用 - 完成执行系列操作
+void ManagerMent::LastOperator()
+{
+	this->ImportRecordToAllGroup();
+}
+
+//将临时文件导入到存储数组中
+bool ManagerMent::ImportRecordToAllGroup()
+{
+	this->_recordFileAllGroup.push_back(this->ReturnOperationAllFileRecord());
+	return true;
+}
+
 //安全函数 - 判断历史记录是否为空
 bool ManagerMent::IsRecordFilesEmpty()
 {
@@ -478,4 +515,81 @@ void ManagerMent::PrintAllRecordFilesInfo()
 			fileIt--;
 		}
 	}
+}
+
+//调试代码 - 导出临时操作所有记录
+std::vector<IntegratedContent> ManagerMent::ReturnOperationAllFileRecord(bool)
+{
+	vector<IntegratedContent> temp;
+	//进入内容：操作类型，修改关键词，原文件名，新文件名，原路径，新路径，大小，
+	vector<RecordFiles>::iterator recordIt = this->GetRecordFilesGroup();
+	for (int i = 0; i < this->_recordFileGroup.size(); i++)
+	{
+		IntegratedContent tempContent;
+		QFileInfo tempFileInfo(QString(recordIt->newFilePath));
+		//存入操作类型
+		if (this->infoGroup.chooseForm == ChooseForm::Sort)
+		{
+			if (this->infoGroup.sortType == SortType::byTimePoints)
+			{
+				tempContent.operationType = (QString("时间点存储"));
+				if (this->detailGroup.byYear == true)
+					tempContent.modifyContent = (QString("按年份"));
+				else
+					tempContent.modifyContent = (QString("按月份"));
+			}
+			else if (this->infoGroup.sortType == SortType::byFileTypes)
+			{
+				tempContent.operationType = (QString("类型存储"));
+				QString tempStr;
+				for (int j = 0; j < this->detailGroup.typeGroup.size(); j++)
+				{
+					tempStr += this->detailGroup.typeGroup[j];
+					tempStr += " ";
+				}
+				tempContent.modifyContent = (tempStr);
+			}
+			else if (this->infoGroup.sortType == SortType::byFileSize)
+			{
+				tempContent.operationType = (QString("大小存储"));
+				QString tempStr;
+				tempStr = QString::number(this->detailGroup.smallFile) + "-" + QString::number(this->detailGroup.largeFile);
+				tempContent.modifyContent = (tempStr);
+			}
+		}
+		else if (this->infoGroup.chooseForm == ChooseForm::Rename)
+		{
+			if (this->infoGroup.renameType == RenameType::renamePrefix)
+			{
+				tempContent.operationType = (QString("追加前缀"));
+				tempContent.modifyContent = (QString("追加内容" + this->detailGroup.renameContent));
+			}
+			else if (this->infoGroup.renameType == RenameType::renameSuffix)
+			{
+				tempContent.operationType = (QString("修改后缀"));
+				tempContent.modifyContent = (QString("修改内容" + this->detailGroup.renameContent));
+			}
+			else if (this->infoGroup.renameType == RenameType::renameByKeyWord)
+			{
+				tempContent.operationType = (QString("统一命名"));
+				tempContent.modifyContent = (QString("统一内容" + this->detailGroup.renameContent));
+			}
+		}
+
+		//存入文件信息
+		tempContent.oldFileName = (recordIt->oldFileName);
+		tempContent.newFileName = (recordIt->newFileName);
+		tempContent.oldFilePath = (recordIt->oldFilePath);
+		tempContent.newFilePath = (recordIt->newFilePath);
+		tempContent.size = (QString::number(tempFileInfo.size()));
+
+		temp.push_back(tempContent);
+
+		if (!this->IsRecordFileItPosFilesTop(recordIt))
+			recordIt--;
+		else
+			break;
+	}
+
+	return temp;
 }
