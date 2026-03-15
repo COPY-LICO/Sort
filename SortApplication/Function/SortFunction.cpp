@@ -188,7 +188,7 @@ bool SortFunction::SortFileByTimePoint()
 
         // 文件夹创建到用户指定路径
         QDir folder;
-        QString folderName = "时间分类:" + timeTag;
+        QString folderName = "时间分类" + timeTag;
         QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
@@ -320,7 +320,7 @@ bool SortFunction::SortFileByFileType()
 
         // 原文件目录创建类型文件夹
         QDir folder;
-        QString folderName = "类型分类:" + suffix;
+        QString folderName = "类型分类" + suffix;
         QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
