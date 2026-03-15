@@ -65,6 +65,7 @@ bool SortFunction::SureSortOperator()
 bool SortFunction::WithDrawOperator()
 {
     qDebug() << "AllRecord:" << manager->GetAllRecordFilesNum();
+    manager->MakeWithdrawSuccessFalse();
     // 获取历史记录迭代器
     if (manager->GetRecordFilesNum() == 0)
     {
@@ -100,6 +101,7 @@ bool SortFunction::WithDrawOperator()
     manager->ClearAllRecordFiles();
     manager->DeleteRecordToAllGroup(manager->GetAllRecordFilesNum() - 1);
     QMessageBox::information(nullptr, "成功", "撤回操作完成！");
+    manager->ModifyWithdrawSuccess(true);
     manager->IndexDecrement();
     return true;
 }

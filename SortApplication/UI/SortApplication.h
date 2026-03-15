@@ -21,7 +21,9 @@ public:
     //新增历史记录
     void AddHistoryItem(const QString& operName, const QString& operMode, const QString& operContent, const QString& operTime, int fileCount);
     //操作完成清除文件储存及显示
-    void ClearItem();    
+    void ClearItem();  
+    //撤回操作后删除相应列表项
+    void deleteTopHistoryItem();
     ~SortApplication();
 
 

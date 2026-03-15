@@ -109,6 +109,13 @@ public:
 	//获得当前索引
 	int GetIndex();
 
+	//撤回成功值初始化
+	void MakeWithdrawSuccessFalse();
+	//获取撤回成功值
+	bool GetWithdrawSuccess();
+	//修改撤回成功值
+	void ModifyWithdrawSuccess(bool);
+
 
 //信号函数
 signals:
@@ -148,5 +155,7 @@ private:
 	QString movePath;
 	//索引
 	int _index = 0;
+	//撤回成功值
+	bool _withdrawSuccess = false;
 };
 

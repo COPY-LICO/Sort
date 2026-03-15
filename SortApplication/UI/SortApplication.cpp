@@ -1060,6 +1060,9 @@ void SortApplication::OnWithdrawClicked()
 
     //触发撤回操作信号
     emit _manager->StartWithDrawOperator();
+
+    //撤回成功删除顶部列表项
+    deleteTopHistoryItem();
 }
 
 //打开历史信息窗口
@@ -1074,6 +1077,31 @@ void SortApplication::onHistoryItemClicked(QListWidgetItem* item)
     QString itemText = item->text().isEmpty() ? "HistoryInfo" : item->text();
     Historydialog->setModal(true);  //模态窗口，防止同时打开多个
     Historydialog->show();
+}
+
+//撤回操作后删除相应列表项
+void SortApplication::deleteTopHistoryItem()
+{
+    ManagerMent* _manager = ManagerMent::GetInstance();
+
+    if (_manager->GetWithdrawSuccess())
+    {
+        QListWidget* historyList = ui.historyRecord_listWidget;
+
+        //列表为空不操作
+        if (historyList->count() == 0)
+        {
+            return;
+        }
+
+        //定位顶部项
+        QListWidgetItem* topItem = historyList->takeItem(0);
+
+        if (topItem)
+        {
+            delete topItem;     //释放内存，避免泄漏
+        }
+    }
 }
 
 

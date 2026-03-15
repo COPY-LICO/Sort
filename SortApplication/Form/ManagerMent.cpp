@@ -418,7 +418,7 @@ int ManagerMent::GetNowRecordNum()
 //索引自减
 void ManagerMent::IndexDecrement()
 {
-	//_index--;
+	_index--;
 }
 
 //索引自增
@@ -431,6 +431,24 @@ void ManagerMent::IndexIncrement()
 int ManagerMent::GetIndex()
 {
 	return _index;
+}
+
+//撤回成功值初始化
+void ManagerMent::MakeWithdrawSuccessFalse()
+{
+	_withdrawSuccess = false;
+}
+
+//获取撤回成功值
+bool ManagerMent::GetWithdrawSuccess()
+{
+	return _withdrawSuccess;
+}
+
+//修改撤回成功值
+void ManagerMent::ModifyWithdrawSuccess(bool success)
+{
+	_withdrawSuccess = success;
 }
 
 //调用 - 完成执行系列操作
