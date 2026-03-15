@@ -418,7 +418,7 @@ int ManagerMent::GetNowRecordNum()
 //索引自减
 void ManagerMent::IndexDecrement()
 {
-	//_index--;
+	_index--;
 }
 
 //索引自增
@@ -437,33 +437,6 @@ int ManagerMent::GetIndex()
 void ManagerMent::LastOperator()
 {
 	this->ImportRecordToAllGroup();
-}
-
-//读入最新的历史记录进入临时记录的信息
-bool ManagerMent::GetLastRecordToTempRecord()
-{
-	this->ClearAllRecordFiles();
-	int lastIndex = _recordFileAllGroup.size() - 1;
-	if (this->_recordFileAllGroup.size() <= 0)
-		return false;
-	RecordFiles* tempRecord = new RecordFiles();
-	for (int i = 0; i < this->_recordFileAllGroup[lastIndex].size(); i++)
-	{
-		tempRecord->newFileName = this->_recordFileAllGroup[lastIndex][i].newFileName;
-		tempRecord->newFilePath = this->_recordFileAllGroup[lastIndex][i].newFilePath;
-		tempRecord->oldFileName = this->_recordFileAllGroup[lastIndex][i].oldFileName;
-		tempRecord->oldFilePath = this->_recordFileAllGroup[lastIndex][i].oldFilePath;
-		this->_recordFileGroup.push_back(*tempRecord);
-	}
-	delete tempRecord;
-
-	return true;
-}
-
-//返回长期存储中的记录数量
-int ManagerMent::GetAllRecordFilesNum()
-{
-	return this->_recordFileAllGroup.size();
 }
 
 //将临时文件导入到存储数组中
