@@ -64,14 +64,19 @@ bool SortFunction::SureSortOperator()
 //撤回函数
 bool SortFunction::WithDrawOperator()
 {
+    qDebug() << "AllRecord:" << manager->GetAllRecordFilesNum();
     // 获取历史记录迭代器
-    std::vector<RecordFiles>::iterator recordIt = manager->GetRecordFilesGroup();
-    if (manager->IsRecordFilesEmpty()) 
+    if (manager->GetRecordFilesNum() == 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无可撤回的操作！");
-        return false;
+        if (manager->GetLastRecordToTempRecord() == false)
+        {
+            QMessageBox::warning(nullptr, "提示", "暂无可撤回的操作！");
+            return false;
+        }
+
     }
 
+    std::vector<RecordFiles>::iterator recordIt = manager->GetRecordFilesGroup();
     manager->PrintAllRecordFilesInfo();
 
     // 遍历所有记录，逐个恢复文件
@@ -93,6 +98,7 @@ bool SortFunction::WithDrawOperator()
 
     // 清空撤回记录
     manager->ClearAllRecordFiles();
+    manager->DeleteRecordToAllGroup(manager->GetAllRecordFilesNum() - 1);
     QMessageBox::information(nullptr, "成功", "撤回操作完成！");
     manager->IndexDecrement();
     return true;
@@ -182,7 +188,7 @@ bool SortFunction::SortFileByTimePoint()
 
         // 文件夹创建到用户指定路径
         QDir folder;
-        QString folderName = "sort_by_time_" + timeTag;
+        QString folderName = "时间分类:" + timeTag;
         QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
@@ -314,7 +320,7 @@ bool SortFunction::SortFileByFileType()
 
         // 原文件目录创建类型文件夹
         QDir folder;
-        QString folderName = "sort_by_type_" + suffix;
+        QString folderName = "类型分类:" + suffix;
         QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
@@ -429,19 +435,19 @@ bool SortFunction::SortFileByFileSize()
         if (smallFile >= 0 && largeFile >= 0)
         {
             if (fileSizeKB <= smallFile)
-                folderName = "sort_by_size_small";
+                folderName = "小文件";
             else if (fileSizeKB >= largeFile)
-                folderName = "sort_by_size_large";
+                folderName = "大文件";
             else
-                folderName = "sort_by_size_mid";
+                folderName = "中文件";
         }
         else if (smallFile >= 0)
         {
-            folderName = fileSizeKB <= smallFile ? "sort_by_size_small" : "sort_by_size_large";
+            folderName = fileSizeKB <= smallFile ? "小文件" : "大文件";
         }
         else if (largeFile >= 0)
         {
-            folderName = fileSizeKB >= largeFile ? "sort_by_size_large" : "sort_by_size_small";
+            folderName = fileSizeKB >= largeFile ? "大文件" : "小文件";
         }
 
         // 文件夹创建到用户指定路径
