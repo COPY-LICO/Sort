@@ -49,6 +49,8 @@ public:
 	DetailInfo* GetOperatorContent();
 	//获取分类文件夹的记录路径
 	QString GetMovePath();
+	//读入最新的历史记录进入临时记录的信息
+	bool GetLastRecordToTempRecord();
 
 
 
@@ -58,6 +60,8 @@ public:
 	int GetNowRecordNum();
 	//返回历史记录中的文件数量
 	int GetRecordFilesNum();
+	//返回长期存储中的记录数量
+	int GetAllRecordFilesNum();
 
 
 
