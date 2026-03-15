@@ -1,10 +1,11 @@
 <RCC>
-  <qresource prefix="SortApplication">
-    <file>images/iconfont_BasicFunction.png</file>
-    <file>images/iconfont_CloudRecord.png</file>
-    <file>images/iconfont_FileUpload.png</file>
-    <file>images/iconfont_OperationRecord.png</file>
-    <file>images/iconfont_StartOperation.png</file>
-    <file>images/iconfont_WithdrawOperation.png</file>
-  </qresource>
+    <qresource prefix="/SortApplication">
+        <file>images/iconfont_BasicFunction.png</file>
+        <file>images/iconfont_CloudRecord.png</file>
+        <file>images/iconfont_FileUpload.png</file>
+        <file>images/iconfont_OperationRecord.png</file>
+        <file>images/iconfont_StartOperation.png</file>
+        <file>images/iconfont_WithdrawOperation.png</file>
+        <file>images/iconfont_CheckBox.png</file>
+    </qresource>
 </RCC>
