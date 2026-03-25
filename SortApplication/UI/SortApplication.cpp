@@ -435,7 +435,7 @@ void SortApplication::AddFiletoItem(const QString& filePath)
         ui.selectedFiles_listWidget->setFocusPolicy(Qt::NoFocus);
 
         //更新文件数量
-        ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
+        ui.textLabel_Selected->setText(QString("选中文件 (%1)").arg(_manager->GetNowFilesNum()));
     }
 }
 
@@ -479,7 +479,7 @@ void SortApplication::OnDeleteItemByRightClick()
 {
     if (_rightClickedItem == nullptr)
     {
-        qDebug() << "There are no file items to be deleted.";
+        qDebug() << "没有可删除文件";
         return;
     }
      
@@ -507,7 +507,7 @@ void SortApplication::OnDeleteItemByRightClick()
         _rightClickedItem = nullptr;    //置空
 
         //更新文件数量
-        ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
+        ui.textLabel_Selected->setText(QString("选中文件 (%1)").arg(_manager->GetNowFilesNum()));
     }
     
 }
@@ -524,8 +524,8 @@ void SortApplication::OnClearItemByRightClick()
     //添加弹窗，防止误操作
     int ret = QMessageBox::question(
         this,
-        "Confirm to clear",
-        "Are you sure you want to clear it?",
+        "确认清空",
+        "请确认是否清空选中文件列表",
         QMessageBox::Yes | QMessageBox::No,
         QMessageBox::No
     );
@@ -554,7 +554,7 @@ void SortApplication::OnClearItemByRightClick()
     _rightClickedItem = nullptr;
 
     //更新文件数量
-    ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
+    ui.textLabel_Selected->setText(QString("选中文件 (%1)").arg(_manager->GetNowFilesNum()));
 }
 
 //文件类型分类面板
@@ -662,7 +662,7 @@ void SortApplication::OnStartButtonClicked()
     ManagerMent* _manager = ManagerMent::GetInstance();
     if (!_manager)
     {
-        QMessageBox::warning(this, "wrong", "Backend management class initialization failed!");
+        QMessageBox::warning(this, "警告", "后端管理类初始化失败！");
         return ;
     }
 
@@ -681,7 +681,7 @@ void SortApplication::OnStartButtonClicked()
     int fileNum = _manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可分类！");
         return ;
     }
 
@@ -712,13 +712,13 @@ void SortApplication::OnStartButtonClicked()
 
             if (byYear && byMonth)
             {
-                QMessageBox::warning(this, "Wrong", "The system gets wrong!");
+                QMessageBox::warning(this, "错误", "系统出现错误！");
                 return;
             }
 
             if (byYear == false && byMonth == false)
             {
-                QMessageBox::warning(this, "Hint", "Please select at least one time type!");
+                QMessageBox::warning(this, "注意", "请选择至少一种时间类型！");
                 return;
             }
         }
@@ -749,7 +749,7 @@ void SortApplication::OnStartButtonClicked()
             }
             if (typeGroup.empty())
             {
-                QMessageBox::warning(this, "Hint", "Please select at least one file type!");
+                QMessageBox::warning(this, "注意", "请选择至少一种文件类型！");
                 return ;
             }
 
@@ -780,7 +780,7 @@ void SortApplication::OnStartButtonClicked()
             QString largeStr = ui.fileSizeLarge_Input->text().trimmed();
 
             if (smallStr.isEmpty() && largeStr.isEmpty()) {
-                QMessageBox::warning(this, "Wrong", "Both input boxes cannot be empty!");
+                QMessageBox::warning(this, "错误", "两个输入框不能均为空！");
                 return;
             }
 
@@ -791,7 +791,7 @@ void SortApplication::OnStartButtonClicked()
             //校验
             if (smallFile < 0 || largeFile < 0 || (!smallStr.isEmpty() && !largeStr.isEmpty() && smallFile > largeFile))
             {
-                QMessageBox::warning(this, "Wrong", "Incorrect input for file size!\nPlease ensure that the minimum value ≤ the maximum value and both are non - negative.");
+                QMessageBox::warning(this, "错误", "文件大小输入错误！\n请确保最小值小于最大值，且两者均为非负数。");
                 return;
             }
 
@@ -816,7 +816,7 @@ void SortApplication::OnStartButtonClicked()
         //未选择
         else
         {
-            QMessageBox::warning(this, "Wrong", "Please Select the SortType!");
+            QMessageBox::warning(this, "错误", "请选择分类类型！");
             return;
         }
 
@@ -824,7 +824,7 @@ void SortApplication::OnStartButtonClicked()
         //选择存储文件夹
         if (_manager->GetMovePath().isEmpty())
         {
-            QMessageBox::warning(this, "Wrong", "Please select the storage address!");
+            QMessageBox::warning(this, "错误", "请选择文件存储位置！");
             return;
         }
 
@@ -877,12 +877,12 @@ void SortApplication::OnStartButtonClicked()
         //未选择
         else
         {
-            QMessageBox::warning(this, "Wrong", "Please Select the RenameType!");
+            QMessageBox::warning(this, "错误", "请选择重命名类型！");
             return;
         }
 
         if (renameText.isEmpty()) {
-            QMessageBox::warning(this, "Hint", "Please Input the Content!");
+            QMessageBox::warning(this, "注意", "请输入内容！");
             return;
         }
 
@@ -896,7 +896,6 @@ void SortApplication::OnStartButtonClicked()
 
     // 调试：打印传递的内容
     _manager->PrintAllOperation();
-    QMessageBox::information(this, "Success", "SUCCESS!");
 
 
     //进行信息收集并储存历史记录
@@ -908,7 +907,7 @@ void SortApplication::OnStartButtonClicked()
     }
     else
     {
-        QMessageBox::warning(this, "Wrong", "There is a problem with record collection!");
+        QMessageBox::warning(this, "错误", "记录收集存在问题！");
         return;
     }
 
@@ -1028,7 +1027,7 @@ void SortApplication::ClearItem()
     }
 
     //更新文件数量
-    ui.textLabel_Selected->setText(QString("The File you Selected (%1)").arg(_manager->GetNowFilesNum()));
+    ui.textLabel_Selected->setText(QString("选中文件 (%1)").arg(_manager->GetNowFilesNum()));
 }
 
 //选择储存文件的文件夹
