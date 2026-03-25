@@ -63,6 +63,7 @@
     <IncludePath>$(ProjectDir)UI;$(ProjectDir)Function;$(ProjectDir)Form;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <IncludePath>D:\CodeFile\Cpp-GUI\Sort\SortApplication\SortApplication\UI;D:\CodeFile\Cpp-GUI\Sort\SortApplication\SortApplication\Function;D:\CodeFile\Cpp-GUI\Sort\SortApplication\SortApplication\Form;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
