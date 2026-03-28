@@ -3,7 +3,6 @@
 #include <qstring.h>
 #include <qobject.h>
 #include <vector>
-#include "HistoryManager.h"
 #include "Files.h"
 #include "InfoGroup.h"
 //这是一个全局管理类，里面所有函数都采用单例形式，可在全局调用负责启动API接口

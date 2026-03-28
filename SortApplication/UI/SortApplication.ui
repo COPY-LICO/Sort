@@ -288,7 +288,7 @@ color:rgb(0, 0, 0);
            </rect>
           </property>
           <property name="title">
-           <string>GroupBox</string>
+           <string/>
           </property>
           <widget class="QRadioButton" name="sortRadioButton">
            <property name="geometry">
@@ -353,7 +353,7 @@ color:rgb(0, 0, 0);
              </rect>
             </property>
             <property name="title">
-             <string>GroupBox</string>
+             <string/>
             </property>
             <widget class="QRadioButton" name="time_radioButton">
              <property name="geometry">
@@ -422,7 +422,7 @@ font-size:14px;
               </rect>
              </property>
              <property name="title">
-              <string>GroupBox</string>
+              <string/>
              </property>
              <widget class="QRadioButton" name="byYear_radioButton">
               <property name="geometry">
@@ -496,7 +496,7 @@ font-size:12px;
               </rect>
              </property>
              <property name="title">
-              <string>GroupBox</string>
+              <string/>
              </property>
              <widget class="QLabel" name="size_Label">
               <property name="geometry">
@@ -657,7 +657,7 @@ background-color:rgb(149, 255, 92);
              </rect>
             </property>
             <property name="title">
-             <string>GroupBox</string>
+             <string/>
             </property>
             <widget class="QRadioButton" name="prefix_radioButton">
              <property name="geometry">
