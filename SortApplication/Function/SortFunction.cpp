@@ -64,14 +64,20 @@ bool SortFunction::SureSortOperator()
 //撤回函数
 bool SortFunction::WithDrawOperator()
 {
+    qDebug() << "AllRecord:" << manager->GetAllRecordFilesNum();
+    manager->MakeWithdrawSuccessFalse();
     // 获取历史记录迭代器
-    std::vector<RecordFiles>::iterator recordIt = manager->GetRecordFilesGroup();
-    if (manager->IsRecordFilesEmpty()) 
+    if (manager->GetRecordFilesNum() == 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无可撤回的操作！");
-        return false;
+        if (manager->GetLastRecordToTempRecord() == false)
+        {
+            QMessageBox::warning(nullptr, "注意", "暂无可撤回的操作！");
+            return false;
+        }
+
     }
 
+    std::vector<RecordFiles>::iterator recordIt = manager->GetRecordFilesGroup();
     manager->PrintAllRecordFilesInfo();
 
     // 遍历所有记录，逐个恢复文件
@@ -93,7 +99,9 @@ bool SortFunction::WithDrawOperator()
 
     // 清空撤回记录
     manager->ClearAllRecordFiles();
+    manager->DeleteRecordToAllGroup(manager->GetAllRecordFilesNum() - 1);
     QMessageBox::information(nullptr, "成功", "撤回操作完成！");
+    manager->IndexDecrement();
     return true;
 }
 
@@ -114,7 +122,7 @@ bool SortFunction::SortFileByTimePoint()
     int fileNum = manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可分类！");
         return false;
     }
 
@@ -181,7 +189,7 @@ bool SortFunction::SortFileByTimePoint()
 
         // 文件夹创建到用户指定路径
         QDir folder;
-        QString folderName = "sort_by_time_" + timeTag;
+        QString folderName = "时间分类" + timeTag;
         QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
@@ -238,7 +246,7 @@ bool SortFunction::SortFileByFileType()
     std::vector<QString> typeList = rule->typeGroup;
     if (typeList.empty())
     {
-        QMessageBox::warning(nullptr, "提示", "未选择要分类的文件类型！");
+        QMessageBox::warning(nullptr, "注意", "未选择要分类的文件类型！");
         return false;
     }
 
@@ -246,7 +254,7 @@ bool SortFunction::SortFileByFileType()
     int fileNum = manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可分类！");
         return false;
     }
 
@@ -313,7 +321,7 @@ bool SortFunction::SortFileByFileType()
 
         // 原文件目录创建类型文件夹
         QDir folder;
-        QString folderName = "sort_by_type_" + suffix;
+        QString folderName = "类型分类" + suffix;
         QString folderPath = userSpecifiedPath + "/" + folderName;
         if (!folder.exists(folderPath))
         {
@@ -378,7 +386,7 @@ bool SortFunction::SortFileByFileSize()
     int fileNum = manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可分类！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可分类！");
         return false;
     }
 
@@ -428,19 +436,19 @@ bool SortFunction::SortFileByFileSize()
         if (smallFile >= 0 && largeFile >= 0)
         {
             if (fileSizeKB <= smallFile)
-                folderName = "sort_by_size_small";
+                folderName = "小文件";
             else if (fileSizeKB >= largeFile)
-                folderName = "sort_by_size_large";
+                folderName = "大文件";
             else
-                folderName = "sort_by_size_mid";
+                folderName = "中文件";
         }
         else if (smallFile >= 0)
         {
-            folderName = fileSizeKB <= smallFile ? "sort_by_size_small" : "sort_by_size_large";
+            folderName = fileSizeKB <= smallFile ? "小文件" : "大文件";
         }
         else if (largeFile >= 0)
         {
-            folderName = fileSizeKB >= largeFile ? "sort_by_size_large" : "sort_by_size_small";
+            folderName = fileSizeKB >= largeFile ? "大文件" : "小文件";
         }
 
         // 文件夹创建到用户指定路径
@@ -499,7 +507,7 @@ bool SortFunction::RenameFileByPrefix()
     QString prefix = rule->renameContent;
     if (prefix.isEmpty())
     {
-        QMessageBox::warning(nullptr, "提示", "前缀内容不能为空！");
+        QMessageBox::warning(nullptr, "注意", "前缀内容不能为空！");
         return false;
     }
 
@@ -507,7 +515,7 @@ bool SortFunction::RenameFileByPrefix()
     int fileNum = manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可重命名！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可重命名！");
         return false;
     }
 
@@ -577,7 +585,7 @@ bool SortFunction::RenameFileBySuffix()
     QString newSuffix = rule->renameContent;
     if (newSuffix.isEmpty())
     {
-        QMessageBox::warning(nullptr, "提示", "后缀内容不能为空！");
+        QMessageBox::warning(nullptr, "注意", "后缀内容不能为空！");
         return false;
     }
     // 统一后缀格式
@@ -590,7 +598,7 @@ bool SortFunction::RenameFileBySuffix()
     int fileNum = manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可重命名！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可重命名！");
         return false;
     }
 
@@ -662,7 +670,7 @@ bool SortFunction::RenameFileByKeyWord()
     QString keyWord = rule->renameContent;
     if (keyWord.isEmpty())
     {
-        QMessageBox::warning(nullptr, "提示", "统一名称不能为空！");
+        QMessageBox::warning(nullptr, "注意", "统一名称不能为空！");
         return false;
     }
 
@@ -670,7 +678,7 @@ bool SortFunction::RenameFileByKeyWord()
     int fileNum = manager->GetNowFilesNum();
     if (fileNum <= 0)
     {
-        QMessageBox::warning(nullptr, "提示", "暂无文件可重命名！");
+        QMessageBox::warning(nullptr, "注意", "暂无文件可重命名！");
         return false;
     }
 

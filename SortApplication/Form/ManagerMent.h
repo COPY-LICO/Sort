@@ -49,6 +49,8 @@ public:
 	DetailInfo* GetOperatorContent();
 	//获取分类文件夹的记录路径
 	QString GetMovePath();
+	//读入最新的历史记录进入临时记录的信息
+	bool GetLastRecordToTempRecord();
 
 
 
@@ -58,6 +60,8 @@ public:
 	int GetNowRecordNum();
 	//返回历史记录中的文件数量
 	int GetRecordFilesNum();
+	//返回长期存储中的记录数量
+	int GetAllRecordFilesNum();
 
 
 
@@ -105,6 +109,13 @@ public:
 	//获得当前索引
 	int GetIndex();
 
+	//撤回成功值初始化
+	void MakeWithdrawSuccessFalse();
+	//获取撤回成功值
+	bool GetWithdrawSuccess();
+	//修改撤回成功值
+	void ModifyWithdrawSuccess(bool);
+
 
 //信号函数
 signals:
@@ -144,5 +155,7 @@ private:
 	QString movePath;
 	//索引
 	int _index = 0;
+	//撤回成功值
+	bool _withdrawSuccess = false;
 };
 

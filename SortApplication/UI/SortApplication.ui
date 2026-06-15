@@ -34,17 +34,9 @@
      <widget class="QWidget" name="Top_Widget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QTextBrowser" name="Main_textBrowser">
-         <property name="html">
-          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:22pt; color:#000000;&quot;&gt;SortApplication&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; color:#565656;&quot;&gt;Your file classification and custom renaming tool&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; color:#000000; background-color:transparent;&quot;&gt;归序管理工具&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; color:#3d3d3d;&quot;&gt;为您提供文件分类与自定义重命名服务&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -96,7 +88,7 @@ border-image: url(:/SortApplication/images/iconfont_FileUpload.png);
             <x>50</x>
             <y>20</y>
             <width>141</width>
-            <height>31</height>
+            <height>21</height>
            </rect>
           </property>
           <property name="font">
@@ -110,7 +102,7 @@ color:rgb(0, 0, 0);
 }</string>
           </property>
           <property name="text">
-           <string>Upload Your File</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;文件上传&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
          <widget class="QWidget" name="fileSelectorWidget" native="true">
@@ -171,7 +163,7 @@ background-color: transparent;
 </string>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#232323;&quot;&gt;Click to select files&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#232323;&quot;&gt;点击选择文件&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
           <widget class="QLabel" name="textLabel_select2">
@@ -191,7 +183,7 @@ background-color: transparent;
 </string>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#232323;&quot;&gt;you can select multiply&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;可以一次选中多个文件&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </widget>
@@ -215,7 +207,7 @@ color:rgb(0, 0, 0);
 }</string>
           </property>
           <property name="text">
-           <string>The File you Selected (0)</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;选中文件(0)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
          <widget class="QListWidget" name="selectedFiles_listWidget">
@@ -269,7 +261,7 @@ border-image: url(:/SortApplication/images/iconfont_BasicFunction.png);
             <x>50</x>
             <y>20</y>
             <width>151</width>
-            <height>31</height>
+            <height>21</height>
            </rect>
           </property>
           <property name="font">
@@ -283,7 +275,7 @@ color:rgb(0, 0, 0);
 }</string>
           </property>
           <property name="text">
-           <string>Select the Function</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;功能选择&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
          <widget class="QGroupBox" name="Func_groupBox">
@@ -310,12 +302,12 @@ color:rgb(0, 0, 0);
            <property name="styleSheet">
             <string notr="true">QRadioButton{
 	color:black;
-	font-size:14px;
+	font-size:15px;
 }
 </string>
            </property>
            <property name="text">
-            <string>Sort</string>
+            <string>分类</string>
            </property>
           </widget>
           <widget class="QRadioButton" name="renameRadioButton">
@@ -330,11 +322,11 @@ color:rgb(0, 0, 0);
            <property name="styleSheet">
             <string notr="true">QRadioButton{
 	color:black;
-	font-size:14px;
+	font-size:15px;
 }</string>
            </property>
            <property name="text">
-            <string>Rename</string>
+            <string>重命名</string>
            </property>
           </widget>
          </widget>
@@ -357,7 +349,7 @@ color:rgb(0, 0, 0);
               <x>20</x>
               <y>0</y>
               <width>201</width>
-              <height>221</height>
+              <height>231</height>
              </rect>
             </property>
             <property name="title">
@@ -375,11 +367,11 @@ color:rgb(0, 0, 0);
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 color:black;
-font-size:13px;
+font-size:14px;
 }</string>
              </property>
              <property name="text">
-              <string>By the Time Points</string>
+              <string>按文件时间分类</string>
              </property>
             </widget>
             <widget class="QRadioButton" name="type_radioButton">
@@ -394,18 +386,18 @@ font-size:13px;
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 color:black;
-font-size:13px;
+font-size:14px;
 }</string>
              </property>
              <property name="text">
-              <string>By the File Types</string>
+              <string>按文件类型分类</string>
              </property>
             </widget>
             <widget class="QRadioButton" name="size_radioButton">
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>150</y>
+               <y>155</y>
                <width>170</width>
                <height>20</height>
               </rect>
@@ -413,11 +405,11 @@ font-size:13px;
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 color:black;
-font-size:13px;
+font-size:14px;
 }</string>
              </property>
              <property name="text">
-              <string>By the File Size</string>
+              <string>按文件大小分类</string>
              </property>
             </widget>
             <widget class="QGroupBox" name="time_groupBox">
@@ -444,11 +436,11 @@ font-size:13px;
               <property name="styleSheet">
                <string notr="true">QRadioButton{
 color:black;
-font-size:11px;
+font-size:12px;
 }</string>
               </property>
               <property name="text">
-               <string>Year</string>
+               <string>年</string>
               </property>
              </widget>
              <widget class="QRadioButton" name="byMonth_radioButton">
@@ -463,11 +455,11 @@ font-size:11px;
               <property name="styleSheet">
                <string notr="true">QRadioButton{
 color:black;
-font-size:11px;
+font-size:12px;
 }</string>
               </property>
               <property name="text">
-               <string>Year-Month</string>
+               <string>月</string>
               </property>
              </widget>
             </widget>
@@ -498,7 +490,7 @@ font-size:11px;
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>170</y>
+               <y>180</y>
                <width>181</width>
                <height>51</height>
               </rect>
@@ -516,7 +508,7 @@ font-size:11px;
                </rect>
               </property>
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#161616;&quot;&gt;Enter at least one number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;请输入至少一个数字&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
              <widget class="QLineEdit" name="fileSizeLarge_Input">
@@ -592,7 +584,7 @@ color:rgb(0, 0, 0);
 }</string>
             </property>
             <property name="text">
-             <string>Select the storage address.</string>
+             <string>请选择文件存储地址</string>
             </property>
            </widget>
            <widget class="QLineEdit" name="selectFolder_Input">
@@ -652,7 +644,7 @@ background-color:rgb(149, 255, 92);
              </rect>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#000000;&quot;&gt;You can choose one of them.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; color:#232323;&quot;&gt;选择任意一个实现重命名操作&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
            <widget class="QGroupBox" name="rename_groupBox">
@@ -679,11 +671,11 @@ background-color:rgb(149, 255, 92);
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 color:black;
-font-size:13px;
+font-size:14px;
 }</string>
              </property>
              <property name="text">
-              <string>Add a prefix</string>
+              <string>添加前缀</string>
              </property>
             </widget>
             <widget class="QLineEdit" name="prefix_Input">
@@ -720,11 +712,11 @@ color:black;
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 color:black;
-font-size:13px;
+font-size:14px;
 }</string>
              </property>
              <property name="text">
-              <string>Add a suffix</string>
+              <string>添加后缀</string>
              </property>
             </widget>
             <widget class="QLineEdit" name="suffix_Input">
@@ -760,11 +752,11 @@ color:black;
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 color:black;
-font-size:13px;
+font-size:14px;
 }</string>
              </property>
              <property name="text">
-              <string>Unify the name</string>
+              <string>统一命名</string>
              </property>
             </widget>
             <widget class="QLineEdit" name="unifyName_Input">
@@ -808,11 +800,11 @@ background-color:rgb(0, 78, 235);
 color:white;
 border-radius:5px;
 text-align: left;
-padding-left: 12px;
+padding-left: 13px;
 }</string>
           </property>
           <property name="text">
-           <string>StartFunc</string>
+           <string>开始执行</string>
           </property>
           <property name="icon">
            <iconset resource="SortApplication.qrc">
@@ -837,11 +829,11 @@ background-color:rgb(255, 85, 0);
 color:white;
 border-radius:5px;
 text-align: left;
-padding-left: 12px;
+padding-left: 13px;
 }</string>
           </property>
           <property name="text">
-           <string>Withdraw</string>
+           <string>撤回操作</string>
           </property>
           <property name="icon">
            <iconset resource="SortApplication.qrc">
@@ -889,7 +881,7 @@ border-image: url(:/SortApplication/images/iconfont_OperationRecord.png);
             <x>50</x>
             <y>20</y>
             <width>151</width>
-            <height>31</height>
+            <height>21</height>
            </rect>
           </property>
           <property name="font">
@@ -903,7 +895,7 @@ color:rgb(0, 0, 0);
 }</string>
           </property>
           <property name="text">
-           <string>The History Record</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;历史记录&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
          <widget class="QListWidget" name="historyRecord_listWidget">
@@ -932,7 +924,6 @@ color:rgb(0, 0, 0);
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>Main_textBrowser</tabstop>
   <tabstop>sortRadioButton</tabstop>
   <tabstop>renameRadioButton</tabstop>
  </tabstops>

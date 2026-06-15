@@ -433,10 +433,55 @@ int ManagerMent::GetIndex()
 	return _index;
 }
 
+//撤回成功值初始化
+void ManagerMent::MakeWithdrawSuccessFalse()
+{
+	_withdrawSuccess = false;
+}
+
+//获取撤回成功值
+bool ManagerMent::GetWithdrawSuccess()
+{
+	return _withdrawSuccess;
+}
+
+//修改撤回成功值
+void ManagerMent::ModifyWithdrawSuccess(bool success)
+{
+	_withdrawSuccess = success;
+}
+
 //调用 - 完成执行系列操作
 void ManagerMent::LastOperator()
 {
 	this->ImportRecordToAllGroup();
+}
+
+//读入最新的历史记录进入临时记录的信息
+bool ManagerMent::GetLastRecordToTempRecord()
+{
+	this->ClearAllRecordFiles();
+	int lastIndex = _recordFileAllGroup.size() - 1;
+	if (this->_recordFileAllGroup.size() <= 0)
+		return false;
+	RecordFiles* tempRecord = new RecordFiles();
+	for (int i = 0; i < this->_recordFileAllGroup[lastIndex].size(); i++)
+	{
+		tempRecord->newFileName = this->_recordFileAllGroup[lastIndex][i].newFileName;
+		tempRecord->newFilePath = this->_recordFileAllGroup[lastIndex][i].newFilePath;
+		tempRecord->oldFileName = this->_recordFileAllGroup[lastIndex][i].oldFileName;
+		tempRecord->oldFilePath = this->_recordFileAllGroup[lastIndex][i].oldFilePath;
+		this->_recordFileGroup.push_back(*tempRecord);
+	}
+	delete tempRecord;
+
+	return true;
+}
+
+//返回长期存储中的记录数量
+int ManagerMent::GetAllRecordFilesNum()
+{
+	return this->_recordFileAllGroup.size();
 }
 
 //将临时文件导入到存储数组中
